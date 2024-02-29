@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { SafeAreaView, View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, SafeAreaView, View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { auth } from "../config/firebaseSetup";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
@@ -60,7 +60,7 @@ const LoginScreen = () => {
 
 
     return (
-        <SafeAreaView style={{flex:1, justifyContent: 'center'}}>
+        <SafeAreaView style={baseStyle.safeArea}>
             <View style = {{padding: 10}}> 
                 <Text
                     style={{
@@ -70,17 +70,17 @@ const LoginScreen = () => {
                     }}
                 >Login
                 </Text>
-                <View style={{ flexDirection: 'row', borderBottomColor: 'black', borderBottomWidth: 1 }}>
+                <View style={baseStyle.emailField}>
                     <MaterialIcons name="alternate-email" size={20} color="black" style={{ marginRight: 5 }} />
                     <TextInput placeholder="email address" value={email} onChangeText={text => setEmail(text)} autoCapitalize="none"/> 
                 </View>
-                <View style={{ flexDirection: 'row', borderBottomColor: 'black', borderBottomWidth: 1, paddingTop: 30 }}>
+                <View style={baseStyle.passwordField}>
                 <MaterialIcons name="lock" size={20} color="black" style={{ marginRight: 5 }} />
                     <TextInput placeholder="password" secureTextEntry={true} value={password} onChangeText={text => setPassword(text)} autoCapitalize="none"/>
                 </View>
                 <TouchableOpacity
                     onPress={signInHandler}
-                    style={{ backgroundColor: '#e04502', padding: 20, borderRadius: 10, marginTop: 30}}
+                    style={baseStyle.signInButton}
                 >
                     <Text style={{ textAlign: 'center', color: 'white', fontSize: 20 }}>Sign In</Text>
                 </TouchableOpacity>
@@ -97,5 +97,27 @@ const LoginScreen = () => {
         </SafeAreaView>
     )
 }
-  
+const baseStyle = StyleSheet.create({
+    safeArea: {
+        flex:1, 
+        justifyContent: 'center'
+    },
+    emailField: {
+        flexDirection: 'row',
+        borderBottomColor: 'black',
+        borderBottomWidth: 1
+    },
+    passwordField: {
+        flexDirection: 'row',
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        paddingTop: 30
+    },
+    signInButton: {
+        backgroundColor: '#e04502',
+        padding: 20,
+        borderRadius: 10,
+        marginTop: 30
+    },
+});
 export default LoginScreen;
