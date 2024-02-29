@@ -27,7 +27,7 @@ const LoginScreen = () => {
                     console.log(JSON.stringify(doc.data()));
                     allProductData.push(doc.data());
                 }
-                console.log(allProductData)
+                console.log(allProductData);
                 navigation.navigate('HomeScreen', { allProductData: allProductData });
             }
         })
@@ -60,40 +60,42 @@ const LoginScreen = () => {
 
 
     return (
-        <SafeAreaView style={{flex:1, justifyContent: 'top'}}>
-            <Text
-                style={{
-                    fontSize: 25,
-                    paddingBottom: 20,
-                    marginLeft: 10
-                }}
-            >Login
-            </Text>
-            <View style={{ flexDirection: 'row', borderBottomColor: 'black', borderBottomWidth: 1 }}>
-                <MaterialIcons name="alternate-email" size={20} color="black" style={{ marginRight: 5 }} />
-                <TextInput placeholder="email address" value={email} onChangeText={text => setEmail(text)} autoCapitalize="none"/> 
-            </View>
-            <View style={{ flexDirection: 'row', borderBottomColor: 'black', borderBottomWidth: 1, paddingTop: 30 }}>
-            <MaterialIcons name="lock" size={20} color="black" style={{ marginRight: 5 }} />
-                <TextInput placeholder="password" secureTextEntry={true} value={password} onChangeText={text => setPassword(text)} autoCapitalize="none"/>
-            </View>
-            <TouchableOpacity
-                onPress={signInHandler}
-                style={{ backgroundColor: '#e04502', padding: 20, borderRadius: 10, marginTop: 30}}
-            >
-                <Text style={{ textAlign: 'center', color: 'white', fontSize: 20 }}>Sign In</Text>
-            </TouchableOpacity>
-            <View style={{ flexDirection: 'row', marginTop: 250  }}>
-                <Text style={{ fontSize: 20, marginLeft: 40 }}>Don't have an account yet? </Text>
+        <SafeAreaView style={{flex:1, justifyContent: 'center'}}>
+            <View style = {{padding: 10}}> 
+                <Text
+                    style={{
+                        fontSize: 25,
+                        paddingBottom: 20,
+                        marginLeft: 10
+                    }}
+                >Login
+                </Text>
+                <View style={{ flexDirection: 'row', borderBottomColor: 'black', borderBottomWidth: 1 }}>
+                    <MaterialIcons name="alternate-email" size={20} color="black" style={{ marginRight: 5 }} />
+                    <TextInput placeholder="email address" value={email} onChangeText={text => setEmail(text)} autoCapitalize="none"/> 
+                </View>
+                <View style={{ flexDirection: 'row', borderBottomColor: 'black', borderBottomWidth: 1, paddingTop: 30 }}>
+                <MaterialIcons name="lock" size={20} color="black" style={{ marginRight: 5 }} />
+                    <TextInput placeholder="password" secureTextEntry={true} value={password} onChangeText={text => setPassword(text)} autoCapitalize="none"/>
+                </View>
                 <TouchableOpacity
-                    onPress={signUpHandler}
+                    onPress={signInHandler}
+                    style={{ backgroundColor: '#e04502', padding: 20, borderRadius: 10, marginTop: 30}}
                 >
-                    <Text style={{ textAlign: 'center', color: '#e04502', fontSize: 20 }}>Sign Up</Text>
+                    <Text style={{ textAlign: 'center', color: 'white', fontSize: 20 }}>Sign In</Text>
                 </TouchableOpacity>
+                <View style={{ flexDirection: 'row', marginTop: 25  }}>
+                    <Text style={{ fontSize: 20, marginLeft: 40 }}>Don't have an account yet? </Text>
+                    <TouchableOpacity
+                        onPress={signUpHandler}
+                    >
+                        <Text style={{ textAlign: 'center', color: '#e04502', fontSize: 20 }}>Sign Up</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
         </SafeAreaView>
     )
 }
-
+  
 export default LoginScreen;
