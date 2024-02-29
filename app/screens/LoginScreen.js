@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { auth } from "../config/firebaseSetup";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigation } from '@react-navigation/core'; 
 
 
@@ -35,23 +35,21 @@ const LoginScreen = () => {
         return unsubscribe;
     }, [])
 
-
+//Handles Sign in Requests
     const signInHandler = async () => {  
         try {
-            const response = await signInWithEmailAndPassword(fbauth, email, password); 
-            console.log(response);
+            
         } catch (error) {
-            console.log(error); 
-            alert("Sign in Failed:" + error.message)
+            
         }
     }
 
-
+//Handles Sign up Requests
     const signUpHandler = async () => {
         try {
             const response = await createUserWithEmailAndPassword(fbauth, email, password)
-            .then(()=>{
-                
+            .then(()=>{ 
+                sendEmailVerification(fbauth.currentUser)
             })
             console.log(response);
         } catch (error) {
