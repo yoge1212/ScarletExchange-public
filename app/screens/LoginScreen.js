@@ -44,7 +44,7 @@ const LoginScreen = () => {
             })
         } catch (error) {
             console.log(error)
-            alert("Registration Failed: " + error.message);
+            alert("Sign-in Failed: " + error.message);
             
         }
     }
