@@ -38,8 +38,13 @@ const LoginScreen = () => {
 //Handles Sign in Requests
     const signInHandler = async () => {  
         try {
-            
+            signInWithEmailAndPassword(fbauth, email, password).then((userCredential) => {
+                const user = userCredential.user;
+                console.log("User Logged In");
+            })
         } catch (error) {
+            console.log(error)
+            alert("Sign-in Failed: " + error.message);
             
         }
     }
