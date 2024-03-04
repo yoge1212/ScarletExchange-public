@@ -67,33 +67,25 @@ const LoginScreen = () => {
     return (
         <SafeAreaView style={baseStyle.safeArea}>
             <View style = {{padding: 10}}> 
-                <Text
-                    style={{
-                        fontSize: 25,
-                        paddingBottom: 20,
-                        marginLeft: 10
-                    }}
-                >Login
+                <Text style={{ fontSize: 25, paddingBottom: 20, marginLeft: 10 }} >
+                    Login
                 </Text>
                 <View style={baseStyle.emailField}>
                     <MaterialIcons name="alternate-email" size={20} color="black" style={{ marginRight: 5 }} />
                     <TextInput placeholder="email address" value={email} onChangeText={text => setEmail(text)} autoCapitalize="none"/> 
                 </View>
                 <View style={baseStyle.passwordField}>
-                <MaterialIcons name="lock" size={20} color="black" style={{ marginRight: 5 }} />
+                    <MaterialIcons name="lock" size={20} color="black" style={{ marginRight: 5 }} />
                     <TextInput placeholder="password" secureTextEntry={true} value={password} onChangeText={text => setPassword(text)} autoCapitalize="none"/>
                 </View>
-                <TouchableOpacity
-                    onPress={signInHandler}
-                    style={baseStyle.signInButton}
-                >
+
+                <TouchableOpacity onPress={signInHandler} style={baseStyle.signInButton} >
                     <Text style={{ textAlign: 'center', color: 'white', fontSize: 20 }}>Sign In</Text>
                 </TouchableOpacity>
+                
                 <View style={{ flexDirection: 'row', marginTop: 25  }}>
                     <Text style={{ fontSize: 20, marginLeft: 40 }}>Don't have an account yet? </Text>
-                    <TouchableOpacity
-                        onPress={signUpHandler}
-                    >
+                    <TouchableOpacity onPress={signUpHandler} >
                         <Text style={{ textAlign: 'center', color: '#e04502', fontSize: 20 }}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
