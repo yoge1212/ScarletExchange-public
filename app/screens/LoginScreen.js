@@ -3,7 +3,7 @@ import { StyleSheet, SafeAreaView, View, Text, Image, TextInput, TouchableOpacit
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { auth } from "../config/firebaseSetup";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { useNavigation } from '@react-navigation/core'; 
+import { useNavigation } from '@react-navigation/core';
 import baseStyle from "../styles/baseStyle";
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 
