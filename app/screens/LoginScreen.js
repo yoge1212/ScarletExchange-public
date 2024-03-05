@@ -3,8 +3,9 @@ import { StyleSheet, SafeAreaView, View, Text, Image, TextInput, TouchableOpacit
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { auth } from "../config/firebaseSetup";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { useNavigation } from '@react-navigation/core'; 
+import { useNavigation } from '@react-navigation/core';
 import baseStyle from "../styles/baseStyle";
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 
 
 const LoginScreen = () => {
@@ -21,7 +22,7 @@ const LoginScreen = () => {
             if (user) {
                 const allProductData = []
                 const products = await getProducts();
-                // console.log(prodcucts);
+                // console.log(products);
                 for (let i = 0; i < products.length; i++) {
                     const doc = products[i];
                     console.log(JSON.stringify(doc.data()));
@@ -38,10 +39,15 @@ const LoginScreen = () => {
 //Handles Sign in Requests
     const signInHandler = async () => {  
         try {
-            signInWithEmailAndPassword(fbauth, email, password).then((userCredential) => {
-                const user = userCredential.user;
+            const userCredential = await signInWithEmailAndPassword(fbauth, email, password);
+            const user = userCredential.user;
+            if(user.emailVerified){
                 console.log("User Logged In");
-            })
+                navigation.navigate('HomeScreen');
+            }
+            else{
+                alert("Not able to sign in");
+            }
         } catch (error) {
             console.log(error)
             alert("Sign-in Failed: " + error.message);
