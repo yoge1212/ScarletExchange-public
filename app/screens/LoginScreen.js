@@ -46,7 +46,7 @@ const LoginScreen = () => {
                 navigation.navigate('HomeScreen');
             }
             else{
-                alert("Not able to sign in");
+                alert("Please verify your email before signing in.");
             }
         } catch (error) {
             console.log(error)
