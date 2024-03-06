@@ -13,7 +13,9 @@ const HomeScreen = ({ route }) => {
             }}>Active Deals Nearby</Text>
             <ScrollView style={styles.ScrollView}>
                 <Text> Products to be populated</Text>
-                <OfferBar/>
+                <OfferBar/> 
+                <OfferBar cost={15} itemName={"test"}/>
+                <OfferBar cost={100.50} itemName = {"battle cats"}/>
 
             </ScrollView>
         </SafeAreaView>
