@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
 //import firestore from '@react-native-firebase/firestore';
 import { getProducts } from '../api/ProductAPI';
+import OfferBar from '../components/offerBar';
 
 const HomeScreen = ({ route }) => {
     return (
@@ -12,6 +13,8 @@ const HomeScreen = ({ route }) => {
             }}>Active Deals Nearby</Text>
             <ScrollView style={styles.ScrollView}>
                 <Text> Products to be populated</Text>
+                <OfferBar/>
+
             </ScrollView>
         </SafeAreaView>
     )
