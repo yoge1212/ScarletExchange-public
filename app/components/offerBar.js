@@ -11,7 +11,7 @@ const OfferBar = ({itemName="NULL", cost=0}) => {
     return (
         <SafeAreaView style={offerStyle}>
         <Text style={offerStyle.border}>
-            Name: ${itemName} {"\n"}
+            Name: {itemName} {"\n"}
             Cost: ${cost}
         </Text>
 

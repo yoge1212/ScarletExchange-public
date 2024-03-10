@@ -2,7 +2,10 @@ import { StyleSheet } from "react-native";
 const baseStyle = StyleSheet.create({
     safeArea: {
         flex:1, 
-        justifyContent: 'center'
+        justifyContent: 'center',
+    },
+    scrollView: {
+        marginHorizontal: 20,
     },
     emailField: {
         flexDirection: 'row',
@@ -16,11 +19,32 @@ const baseStyle = StyleSheet.create({
         paddingTop: 30
     },
     signInButton: {
-        backgroundColor: '#e04502',
-        padding: 20,
+        padding: 15,
+        borderWidth: 2,
+        borderColor: "black",
         borderRadius: 10,
-        marginTop: 30
+        marginTop: 30,
+        marginLeft: 60,
+        marginRight: 60,
+
     },
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
+    logo: {
+        width: 200,
+        height: 200,
+    },
+    field: {
+        marginTop: 15,
+        marginBottom:10,
+        padding:15,
+        borderWidth: 2,
+        borderColor: "black",
+        borderRadius: 8,
+    }
 });
 
 export default baseStyle;
