@@ -11,7 +11,8 @@ import { ScrollView } from "react-native";
 const LoginScreen = () => {
 
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState('') 
+    const [showPassword,setShowPassword] = useState('')
     const fbauth = auth;
 
     const navigation = useNavigation(); 
@@ -38,36 +39,45 @@ const LoginScreen = () => {
 
 //Handles Sign in Requests
     const signInHandler = async () => {  
-        try {
-            const userCredential = await signInWithEmailAndPassword(fbauth, email, password);
-            const user = userCredential.user;
-            if(user.emailVerified){
-                console.log("User Logged In");
-                navigation.navigate('HomeScreen');
+        try { 
+            const response = await signInWithEmailAndPassword(fbauth, email, password); 
+            //check if the user trying to sign in has verified their email(Yes-Home,No-Resend Verification)
+            if(fbauth.currentUser.emailVerified){
+                navigation.navigate('HomeScreen')
+            }else{ 
+                sendEmailVerification(fbauth.currentUser)
+                alert('Please check your email and verify your email')
             }
-            else{
-                alert("Please verify your email before signing in.");
-            }
+            console.log(response);
         } catch (error) {
-            console.log(error)
-            alert("Sign-in Failed: " + error.message);
-            
+            console.log(error); 
+            alert("Sign in Failed:" + error.message)
+
         }
     }
 
 //Handles Sign up Requests
     const signUpHandler = async () => {
-        try {
-            const response = await createUserWithEmailAndPassword(fbauth, email, password)
-            .then(()=>{ 
-                sendEmailVerification(fbauth.currentUser)
-            })
-            console.log(response);
+        try {  
+            if (email.endsWith('@scarletmail.rutgers.edu')) {
+                // If the email address is allowed, proceed with sign-up
+                const response = await createUserWithEmailAndPassword(fbauth, email, password);
+                sendEmailVerification(fbauth.currentUser);
+                console.log(response); 
+                alert("Please check your email and verify your email")
+            } else {
+                // If the email address is not allowed, display an error message
+                alert('Only @scarletmail.rutgers.edu email addresses can sign-up.'); 
+            }
         } catch (error) {
             console.log(error); 
             alert("Registration Failed:" + error.message)
         }
-    }
+    } 
+//Shows password when eye icon is toggled
+    const toggleShowPassword = () => { 
+        setShowPassword(!showPassword); 
+    }; 
 
 
     return (
