@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigation } from '@react-navigation/core'; 
 import { auth } from "../config/firebaseSetup";
-
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import baseStyle from "../styles/baseStyle";
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { ScrollView } from "react-native";
 // Separate component for Logo
 const Logo = () => {
   return (
@@ -124,23 +126,77 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const navigation = useNavigation(); 
 
-  const signInHandler = async () => {
-    try {
-      // Implement sign-in functionality
-    } catch (error) {
-      // Handle sign-in error
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('') 
+    const [showPassword,setShowPassword] = useState('')
+    const fbauth = auth;
+
+    const navigation = useNavigation(); 
+
+     //UseEffect that will redirect us to the home page whenever there is a AuthStateChange and passes in the product props to populate home page 
+     useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(async user => {
+            if (user) {
+                const allProductData = []
+                const products = await getProducts();
+                // console.log(products);
+                for (let i = 0; i < products.length; i++) {
+                    const doc = products[i];
+                    console.log(JSON.stringify(doc.data()));
+                    allProductData.push(doc.data());
+                }
+                console.log(allProductData);
+                navigation.navigate('HomeScreen', { allProductData: allProductData });
+            }
+        })
+
+        return unsubscribe;
+    }, [])
+
+//Handles Sign in Requests
+    const signInHandler = async () => {  
+        try { 
+            const response = await signInWithEmailAndPassword(fbauth, email, password); 
+            //check if the user trying to sign in has verified their email(Yes-Home,No-Resend Verification)
+            if(fbauth.currentUser.emailVerified){
+                navigation.navigate('HomeScreen')
+            }else{ 
+                sendEmailVerification(fbauth.currentUser)
+                alert('Please check your email and verify your email')
+            }
+            console.log(response);
+        } catch (error) {
+            console.log(error); 
+            alert("Sign in Failed:" + error.message)
+
+        }
     }
   };
 
 
-  const signUpHandler = async () => {
-    try {
-      // Implement sign-up functionality
-    } catch (error) {
-      console.log(error); 
-      alert("Registration Failed:" + error.message)
-    }
-  };
+//Handles Sign up Requests
+    const signUpHandler = async () => {
+        try {  
+            if (email.endsWith('@scarletmail.rutgers.edu')) {
+                // If the email address is allowed, proceed with sign-up
+                const response = await createUserWithEmailAndPassword(fbauth, email, password);
+                sendEmailVerification(fbauth.currentUser);
+                console.log(response); 
+                alert("Please check your email and verify your email")
+            } else {
+                // If the email address is not allowed, display an error message
+                alert('Only @scarletmail.rutgers.edu email addresses can sign-up.'); 
+            }
+        } catch (error) {
+            console.log(error); 
+            alert("Registration Failed:" + error.message)
+        }
+    } 
+//Shows password when eye icon is toggled
+    const toggleShowPassword = () => { 
+        setShowPassword(!showPassword); 
+    }; 
 
   const forgotPasswordHandler = () => {
     // Implement forgot password functionality
@@ -171,5 +227,6 @@ const LoginScreen = () => {
     </SafeAreaView>
   );
 };
+
 
 export default LoginScreen;
