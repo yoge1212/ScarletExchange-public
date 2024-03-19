@@ -6,7 +6,6 @@ import { auth } from "../config/firebaseSetup";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import baseStyle from "../styles/baseStyle";
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import { ScrollView } from "react-native";
 // Separate component for Logo
 const Logo = () => {
   return (
@@ -122,17 +121,13 @@ const ForgotPasswordText = ({ onPress }) => {
   };
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigation = useNavigation(); 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigation = useNavigation(); 
 
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('') 
     const [showPassword,setShowPassword] = useState('')
     const fbauth = auth;
-
-    const navigation = useNavigation(); 
 
      //UseEffect that will redirect us to the home page whenever there is a AuthStateChange and passes in the product props to populate home page 
      useEffect(() => {
@@ -172,7 +167,6 @@ const LoginScreen = () => {
 
         }
     }
-  };
 
 
 //Handles Sign up Requests
@@ -198,34 +192,34 @@ const LoginScreen = () => {
         setShowPassword(!showPassword); 
     }; 
 
-  const forgotPasswordHandler = () => {
-    // Implement forgot password functionality
-  };
+    const forgotPasswordHandler = () => {
+        // Implement forgot password functionality
+    };
 
-  const hidePasswordHandler = () => {
+    const hidePasswordHandler = () => {
 
-  };
+    };
   
     
     
 
-  return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
-     <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+    return (
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
 
-      <Logo />
-      <Text style={{ fontFamily: 'ralewaybold', fontSize: 40, paddingBottom: 30, paddingTop: 30, fontWeight: '900'}}>Welcome</Text>
-      <EmailInput email={email} setEmail={setEmail} />
-      <PasswordInput password={password} setPassword={setPassword} />
-      <ForgotPasswordText onPress={forgotPasswordHandler} />
-      <LoginButton signInHandler={signInHandler} />
-      <SignUpText signUpHandler={signUpHandler} />
+        <Logo />
+        <Text style={{ fontFamily: 'ralewaybold', fontSize: 40, paddingBottom: 30, paddingTop: 30, fontWeight: '900'}}>Welcome</Text>
+        <EmailInput email={email} setEmail={setEmail} />
+        <PasswordInput password={password} setPassword={setPassword} />
+        <ForgotPasswordText onPress={forgotPasswordHandler} />
+        <LoginButton signInHandler={signInHandler} />
+        <SignUpText signUpHandler={signUpHandler} />
 
-      </ScrollView>
-      
+        </ScrollView>
+        
 
-    </SafeAreaView>
-  );
+        </SafeAreaView>
+    );
 };
 
 
