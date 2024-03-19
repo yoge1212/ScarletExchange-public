@@ -7,15 +7,19 @@ import offerStyle from '../styles/offerStyle';
 // this will hold our offers 
 // no code in it right now 
 // three parameters, image src, name of item and cost
+
+// we also need a heart button component 
+
+// 
 const OfferBar = ({itemName="NULL", cost=0}) => {
     return (
-        <SafeAreaView style={offerStyle}>
-        <Text style={offerStyle.border}>
+        <View style={[offerStyle.container, offerStyle.border]}>
+        <Text>
             Name: {itemName} {"\n"}
             Cost: ${cost}
         </Text>
 
-        </SafeAreaView>
+        </View>
         
     );
 }
