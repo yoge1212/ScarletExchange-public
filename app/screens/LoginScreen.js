@@ -69,9 +69,9 @@ const PasswordInput = ({ password, setPassword }) => {
 // Separate component for Login Button
 const LoginButton = ({ signInHandler }) => {
 
-const navigation = useNavigation();
+  const navigation = useNavigation();
 
-const handleSignIn = () => {
+  const handleSignIn = () => {
     signInHandler(); 
     navigation.navigate('HomeScreen'); 
 
@@ -187,7 +187,7 @@ const LoginScreen = () => {
             alert("Registration Failed:" + error.message)
         }
     } 
-//Shows password when eye icon is toggled
+    //Shows password when eye icon is toggled
     const toggleShowPassword = () => { 
         setShowPassword(!showPassword); 
     }; 
@@ -199,9 +199,6 @@ const LoginScreen = () => {
     const hidePasswordHandler = () => {
 
     };
-  
-    
-    
 
     return (
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
