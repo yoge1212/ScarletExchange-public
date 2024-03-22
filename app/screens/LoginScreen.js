@@ -6,15 +6,7 @@ import { auth } from "../config/firebaseSetup";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import baseStyle from "../styles/baseStyle";
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-// Separate component for Logo
-const Logo = () => {
-  return (
-    <Image
-      source={require('../assets/Logo.jpg')}
-      style={{ justifyContent: 'center', alignItems: 'center', width: 176, height: 220, marginTop: 5, zIndex:1 }}
-    />
-  );
-};
+import Logo from "../components/logo";
 
 // Separate component for Email Input
 const EmailInput = ({ email, setEmail }) => {

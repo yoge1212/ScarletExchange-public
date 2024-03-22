@@ -3,31 +3,8 @@ import { SafeAreaView, View, Text, Image, TextInput, TouchableOpacity, ScrollVie
 import { useNavigation } from '@react-navigation/core'; 
 import { auth } from "../config/firebaseSetup";
 import loginStyles from "../styles/LoginStyles";
-// Separate component for Logo
-const Logo = () => {
-  return (
-    <Image
-      source={require('../assets/Logo.jpg')}
-      style={{ justifyContent: 'center', alignItems: 'center', width: 176, height: 220, marginTop: 5, zIndex:1 }}
-    />
-  );
-};
-
-// Separate component for Email Input
-const EmailInput = ({ email, setEmail }) => {
-  return (
-    <View style={loginStyles.EmailInput}>
-    
-      <TextInput
-        placeholder="Email address"
-        value={email}
-        onChangeText={text => setEmail(text)}
-        autoCapitalize="none"
-        style={[{ fontFamily: 'ralewaylight' }, { color: 'black' }]}
-        /> 
-    </View>
-  );
-};
+import Logo from "../components/logo";
+import EmailInput from "../components/emailInput";
 
 // Separate component for Login Button
 const ResetPasswordButton = ({ passwordResetHandler }) => {

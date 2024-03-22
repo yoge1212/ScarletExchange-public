@@ -3,15 +3,7 @@ import { SafeAreaView, View, Text, Image, TextInput, TouchableOpacity, ScrollVie
 import { useNavigation } from '@react-navigation/core'; 
 import { auth } from "../config/firebaseSetup";
 import loginStyles from "../styles/LoginStyles";
-// Separate component for Logo
-const Logo = () => {
-  return (
-    <Image
-      source={require('../assets/Logo.jpg')}
-      style={{ justifyContent: 'center', alignItems: 'center', width: 176, height: 220, marginTop: 5, zIndex:1 }}
-    />
-  );
-};
+import Logo from "../components/logo";
 
 
 // Separate component for Sign Up Text
