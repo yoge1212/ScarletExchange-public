@@ -14,10 +14,19 @@ import offerStyle from '../styles/offerStyle';
 const OfferBar = ({itemName="NULL", cost=0}) => {
     return (
         <View style={[offerStyle.container, offerStyle.border]}>
-        <Text>
-            Name: {itemName} {"\n"}
-            Cost: ${cost}
-        </Text>
+            <>
+            <Image 
+                style={{ width: '100%', height: undefined, aspectRatio: 1 }} 
+                resizeMode="contain" 
+                source={require('../assets/Logo.jpg')}
+            />
+            </>
+            <>
+            <Text>
+                Name: {itemName} {"\n"}
+                Cost: ${cost}
+            </Text>
+            </>
 
         </View>
         

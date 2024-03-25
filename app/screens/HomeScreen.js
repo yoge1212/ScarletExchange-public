@@ -6,6 +6,22 @@ import OfferBar from '../components/offerBar';
 import Navbar from '../components/Navbar';
 
 const HomeScreen = ({ route }) => {
+
+
+    const dummyList = [
+        { itemName: 'tst', cost: 10 },
+        { itemName: 'tst2', name: 20 },
+        { itemName: 'battle cats', name: 100.50 },
+        // ...more items
+    ];
+
+    /**                <View style = {{ flexDirection: 'row'}}> 
+                    <OfferBar /> 
+                    <OfferBar cost={15} itemName={"test"}/>
+                    <OfferBar cost={100.50} itemName={"battle cats"}/>
+                </View> */
+
+
     return (
         <SafeAreaView style={styles.container}> 
         <View style={styles.topBar}>
@@ -18,9 +34,11 @@ const HomeScreen = ({ route }) => {
             </View>
 
             <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
-                <OfferBar /> 
-                <OfferBar cost={15} itemName={"test"}/>
-                <OfferBar cost={100.50} itemName={"battle cats"}/>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    {dummyList.map((item) => (
+                        <OfferBar cost={item.cost} itemName={item.itemName}/>
+                    ))}
+                </View>
                 {/* Add more OfferBar components as needed */}
             </ScrollView> 
 

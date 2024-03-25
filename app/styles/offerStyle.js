@@ -9,7 +9,7 @@ const offerStyle = StyleSheet.create({
     },
     container: {
         width: "40%",
-        height: 120,
+        height: "45%",
     }
 });
 
