@@ -136,7 +136,22 @@ const ProfileScreen = ({ route }) => {
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-  container: {
+    productsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+      },
+    productContainer: {
+        margin: 10,
+      },
+    productThumbnail: {
+        width: 150,
+        height: 150,
+        borderRadius: 10,
+      },
+    container: {
     flex: 1,
     backgroundColor: '#fff',
     padding: 20,
