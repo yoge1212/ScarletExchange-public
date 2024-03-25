@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image, Text } from 'react-native';
 import { fdb, auth } from '../config/firebaseSetup';
 import * as ImagePicker from 'expo-image-picker';
 import Navbar from '../components/Navbar';
@@ -90,6 +90,13 @@ const CreateNewListing = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.container2]}>
+        <Text style={[styles.name, {fontSize: 20}]}>
+            New Item
+          </Text>
+          <Image resizeMode="contain" source = {require('../assets/editIcon.png')} style={styles.image}/>
+      </View>
+
       <ScrollView contentContainerStyle={styles.container}>
         <Button title="Pick Images" onPress={pickImages} />
         <ScrollView horizontal>
@@ -139,12 +146,21 @@ const CreateNewListing = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   container: {
     flexGrow: 1,
-    backgroundColor: '#fff',
     padding: 20,
     paddingBottom: 60, // Adjust padding to accommodate the navbar
+  },
+  container2: {
+    padding: 10,
+    borderBottomWidth: 2,
+    height: '7%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
   },
   input: {
     height: 40,
@@ -157,6 +173,16 @@ const styles = StyleSheet.create({
     height: 100,
     textAlignVertical: 'top',
   },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  image: {
+    width: '10%',
+    height: undefined,
+    aspectRatio: 1,
+  }
 });
 
 export default CreateNewListing;
