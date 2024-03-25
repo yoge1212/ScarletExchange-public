@@ -1,8 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TextInput, TouchableOpacity,} from 'react-native';
-//import firestore from '@react-native-firebase/firestore';
-import { getProducts } from '../api/ProductAPI';
-import OfferBar from '../components/offerBar'; 
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import ProductCard from '../components/ProductCard'; 
 import Navbar from '../components/Navbar';
 
 const HomeScreen = ({ route }) => {
@@ -24,7 +22,7 @@ const HomeScreen = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.container}> 
-        <View style={styles.topBar}>
+            <View style={styles.topBar}>
                 <View style={styles.searchContainer}>
                     <TextInput style={styles.searchInput} placeholder="Search..." />
                     <TouchableOpacity style={styles.filterButton}>
@@ -33,27 +31,32 @@ const HomeScreen = ({ route }) => {
                 </View>
             </View>
 
-            <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {dummyList.map((item) => (
-                        <OfferBar cost={item.cost} itemName={item.itemName}/>
-                    ))}
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                <View style={styles.offerBarContainer}>
+                    <View style={styles.row}>
+                        <ProductCard name="Textbook" price={50} imageUri="https://example.com/product1.jpg" />
+                        <ProductCard name="Shower Caddy" price={15} imageUri="" />
+                    </View>
+                    <View style={styles.row}>
+                        <ProductCard name="Shoe Rack" price={40} imageUri="https://example.com/product3.jpg" />
+                        <ProductCard name="Biology Textbook" price={55} imageUri="https://example.com/product4.jpg" />
+                    </View> 
+                    <View style={styles.row}>
+                        <ProductCard name="Desk Organizer" price={30} imageUri="https://example.com/product3.jpg" />
+                        <ProductCard name="T-Shirt" price={15} imageUri="https://example.com/product4.jpg" />
+                    </View> 
+                    {/* Add more rows of ProductCard components as needed */}
                 </View>
-                {/* Add more OfferBar components as needed */}
-            </ScrollView> 
+            </ScrollView>
 
-            <View style={styles.navbarContainer}>
-                <Navbar />
-            </View>
+            <Navbar />
         </SafeAreaView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
     }, 
     topBar: {
         flexDirection: 'row',
@@ -65,10 +68,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         width: '100%',
-    },
-    logo: {
-        width: 100,
-        height: 30,
     },
     searchContainer: {
         flexDirection: 'row',
@@ -93,16 +92,17 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
-    header: {
-        fontSize: 30,
-        paddingBottom: 20,
-    },
-    subheader: {
-        paddingBottom: 10,
-    },
     scrollViewContent: {
-        padding: 20,
-        width: '100%',
+        padding: 10,
+    },
+    offerBarContainer: {
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
     },
     navbarContainer: {
         position: 'absolute',
@@ -110,6 +110,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
     },
-})
+});
 
 export default HomeScreen;
