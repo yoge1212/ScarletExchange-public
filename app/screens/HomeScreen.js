@@ -5,8 +5,20 @@ import Navbar from '../components/Navbar';
 
 const HomeScreen = ({ route }) => {
 
-
+    console.log()
     const dummyList = [
+        { name: 'Textbook', price: 50, imageURI: 'https://example.com/product1.jpg'},
+        { name: 'Shower Caddy', price: 15, imageURI: ''},
+        { name: 'Shoe Rack', price: 40, imageURI: "https://example.com/product3.jpg"},
+        { name: "Biology Textbook", price: 40,  imageUri: "https://example.com/product4.jpg"},
+        { name: 'Desk Organizer', price: 30, imageURI: 'https://example.com/product3.jpg'},
+        { name: 'T-Shirt', price: 15, imageURI: 'https://example.com/product4.jpg'},
+        { name: 'Textbook', price: 50, imageURI: 'https://example.com/product1.jpg'},
+        { name: 'Shower Caddy', price: 15, imageURI: ''},
+        { name: 'Shoe Rack', price: 40, imageURI: "https://example.com/product3.jpg"},
+        { name: "Biology Textbook", price: 40,  imageUri: "https://example.com/product4.jpg"},
+        { name: 'Desk Organizer', price: 30, imageURI: 'https://example.com/product3.jpg'},
+        { name: 'T-Shirt', price: 15, imageURI: 'https://example.com/product4.jpg'},
         { name: 'Textbook', price: 50, imageURI: 'https://example.com/product1.jpg'},
         { name: 'Shower Caddy', price: 15, imageURI: ''},
         { name: 'Shoe Rack', price: 40, imageURI: "https://example.com/product3.jpg"},
@@ -15,7 +27,6 @@ const HomeScreen = ({ route }) => {
         { name: 'T-Shirt', price: 15, imageURI: 'https://example.com/product4.jpg'},
         // ...more items
     ];
-
 
     return (
         <SafeAreaView style={styles.container}> 
