@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
-import { useNavigation } from '@react-navigation/core'; 
+import { useNavigation } from '@react-navigation/core';  
 import { auth } from "../config/firebaseSetup";
 import loginStyles from "../styles/LoginStyles";
 import Logo from "../components/logo";

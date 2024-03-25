@@ -1,31 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/core'; 
-import { auth } from "../config/firebaseSetup";
+import { auth , } from "../config/firebaseSetup"; 
+import { sendPasswordResetEmail } from "firebase/auth";
 import loginStyles from "../styles/LoginStyles";
 import Logo from "../components/logo";
-import EmailInput from "../components/emailInput";
+import EmailInput from "../components/emailInput"; 
 
 // Separate component for Login Button
-const ResetPasswordButton = ({ passwordResetHandler }) => {
-
-    const navigation = useNavigation();
-
-    const handleReset = () => {
-        passwordResetHandler(); 
-        alert("hello world");
-        //navigation.navigate('HomeScreen'); 
-    };
-
-  return (
-    <TouchableOpacity
-      onPress={handleReset}
-      style={loginStyles.button}
-    >
-      <Text style={{ textAlign: 'center', color: 'black', fontSize: 15 }}>Send Password Reset</Text>
-    </TouchableOpacity>
-  );
-};
 
 // Separate component for Sign Up Text
 
@@ -43,16 +25,23 @@ const ResetPassword = () => {
                 // If the email address is allowed, proceed with sending
                 if (emailConfirm === email)
                 {
-                    /* *cool backend stuff like sending the email* */
-
-                    navigation.navigate("PasswordResetConfirm")
+                    sendPasswordResetEmail(auth, email)
+                    .then(() => { 
+                        alert("Email sent. Please check your inbox!");
+                        navigation.navigate("LoginScreen")
+                    })
+                    .catch((error) => {
+                      const errorCode = error.code;
+                      const errorMessage = error.message;
+                      // ..
+                    });
                 } else {
                     console.log("Email doesn't match");
                 }
             }
         } catch (error) {
             console.log(error); 
-            alert("Sign in Failed:" + error.message)
+            alert("Reset Failed:" + error.message)
         }
     }
 
@@ -64,7 +53,12 @@ const ResetPassword = () => {
         <Text style={loginStyles.titleText}>Reset Password</Text>
         <EmailInput email={email} setEmail={setEmail} />
         <EmailInput email={emailConfirm} setEmail={setEmailConfirm} />
-        <ResetPasswordButton passwordResetHandler={passwordResetHandler} />
+        <TouchableOpacity
+      onPress={passwordResetHandler}
+      style={loginStyles.button}
+    >
+      <Text style={{ textAlign: 'center', color: 'black', fontSize: 15 }}>Send Password Reset</Text>
+    </TouchableOpacity>
         </ScrollView>
         </SafeAreaView>
     );
