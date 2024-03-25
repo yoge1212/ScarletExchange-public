@@ -15,11 +15,11 @@ import Navbar from '../components/Navbar';
 import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = ({ route }) => { 
-  const navigation = useNavigation();
-  const [user, setUser] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState(null); 
+    const navigation = useNavigation();
+    const [user, setUser] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
 
   const handleEditProfile = () => {
     navigation.navigate('EditProfileScreen'); // Navigate to EditProfileScreen
@@ -62,22 +62,23 @@ const ProfileScreen = ({ route }) => {
 
   const fetchProducts = async (userId) => {
     try {
-      const q = query(collection(fdb, 'products'), where('userId', '==', userId));
-      const querySnapshot = await getDocs(q);
-  
-      querySnapshot.forEach((doc) => {
-        console.log('Document data:', doc.data());
-        // Process each product document here
-      });
-  
-      if (querySnapshot.empty) {
-        console.log('No products listed by the user.');
+        const q = query(collection(fdb, 'products'), where('userId', '==', userId));
+        const querySnapshot = await getDocs(q);
+    
+        const productsList = [];
+        querySnapshot.forEach((doc) => {
+          productsList.push({ id: doc.id, ...doc.data() });
+        });
+        setProducts(productsList);
+    
+        if (querySnapshot.empty) {
+          console.log('No products listed by the user.');
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -98,25 +99,32 @@ const ProfileScreen = ({ route }) => {
             />
             <Text style={styles.userName}>{userData?.fname || 'Test'} {userData?.lname || 'User'}</Text>
             <TouchableOpacity style={styles.actionButton} onPress={handleEditProfile}>
-          <Text style={styles.actionButtonText}>Edit Profile</Text>
-        </TouchableOpacity> 
-        <TouchableOpacity style={styles.actionButton} onPress={handleCreateNewListing}>
-          <Text style={styles.actionButtonText}>Create New Listing</Text>
-        </TouchableOpacity>
+              <Text style={styles.actionButtonText}>Edit Profile</Text>
+            </TouchableOpacity> 
+            <TouchableOpacity style={styles.actionButton} onPress={handleCreateNewListing}>
+              <Text style={styles.actionButtonText}>Create New Listing</Text>
+            </TouchableOpacity>
             <View style={styles.userInfoWrapper}>
               <View style={styles.userInfoItem}>
               </View>
               {/* Add more user info items as needed */}
             </View>
             {products.length === 0 ? (
-            <Text>No products listed by the user.</Text>
-          ) : (
-            products.map((item) => (
-              <View key={item.id}>
-                {/* Render each post item */}
-              </View>
-            ))
-          )}
+              <Text>No products listed by the user.</Text>
+            ) : 
+              products.map((product) => (
+                <TouchableOpacity
+                  key={product.id}
+                  style={styles.productContainer}
+                  onPress={() => navigation.navigate('ProductDetails', { productId: product.id })}
+                >
+                  <Image
+                    source={{ uri: product.thumbnail }}
+                    style={styles.productThumbnail}
+                  />
+                </TouchableOpacity>
+              ))
+            }
           </>
         )}
       </ScrollView>

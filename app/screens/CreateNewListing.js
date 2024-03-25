@@ -1,90 +1,135 @@
-import React, { useState,  useEffect  } from 'react';
-import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
-import { fdb, auth } from '../config/firebaseSetup'; 
-import Navbar from '../components/Navbar'; 
-import { collection, addDoc } from "firebase/firestore";
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { fdb, auth } from '../config/firebaseSetup';
+import * as ImagePicker from 'expo-image-picker';
+import Navbar from '../components/Navbar';
+import { collection, addDoc } from "firebase/firestore";  
+import { useNavigation } from '@react-navigation/core';
 
 const CreateNewListing = () => {
-    const [name, setName] = useState('');
-    const [price, setPrice] = useState('');
-    const [condition, setCondition] = useState('');
-    const [tags, setTags] = useState('');
-    const [description, setDescription] = useState('');
-    const [userId, setUserId] = useState(null); 
+  const [productName, setProductName] = useState('');
+  const [productPrice, setProductPrice] = useState('');
+  const [productCondition, setProductCondition] = useState('');
+  const [productDescription, setProductDescription] = useState('');
+  const [productTags, setProductTags] = useState('');
+  const [images, setImages] = useState([]);
+  const [userId, setUserId] = useState(null); 
+  const navigation = useNavigation();
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-          if (user) {
-            setUserId(user.uid);
-          } else {
-            // Handle when user is not authenticated
-          }
-        });
-    
-        return unsubscribe;
-      }, []);
+  const pickImages = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      multiple: true, // Allow multiple image selection
+    });
 
-  const handleSubmit = async () => {  
+    if (!result.cancelled) {
+      const selectedImages = result.assets.map(asset => asset.uri);
+      setImages(prevImages => [...prevImages, ...selectedImages]);
+    }
+  };
+
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImages([...images, result.uri]);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        // Handle when user is not authenticated
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const handleUpload = async () => { 
+
+    console.log(images)
 
     try {
-        const docRef = await addDoc(collection(fdb, 'products'), {
-          name,
-          price,
-          condition,
-          tags,
-          description,
-          userId: userId, // Replace userId field with actual user ID
-        });
-        console.log('Document written with ID: ', docRef.id);
-        // Reset form fields after successful submission
-        setName('');
-        setPrice('');
-        setCondition('');
-        setTags('');
-        setDescription('');
-        alert('Product added successfully!');
-      } catch (error) {
-        console.error('Error adding product: ', error);
-        alert('Failed to add product. Please try again.');
-      }
+      const docRef = await addDoc(collection(fdb, 'products'), {
+        name: productName,
+        price: productPrice,
+        condition: productCondition,
+        description: productDescription,
+        tags: productTags,
+        images: images, // Assign the array of images to the 'images' key
+        userId: userId,
+      });
+      console.log('Document written with ID: ', docRef.id);
+      // Reset form fields after successful submission
+      setProductName('');
+      setProductPrice('');
+      setProductCondition('');
+      setProductTags('');
+      setProductDescription('');
+      setImages([]);
+
+      alert('Product added successfully!'); 
+      navigation.navigate('ProfileScreen');
+  } catch (error) {
+    console.error('Error adding product: ', error);
+    // Show error alert
+    alert('Failed to add product. Please try again.');
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
+        <Button title="Pick Images" onPress={pickImages} />
+        <ScrollView horizontal>
+          {images.map((uri, index) => (
+            <Image key={index} source={{ uri }} style={{ width: 200, height: 200, margin: 5 }} />
+          ))}
+        </ScrollView>
         <TextInput
           style={styles.input}
           placeholder="Product Name"
-          value={name}
-          onChangeText={setName}
+          value={productName}
+          onChangeText={setProductName}
         />
         <TextInput
           style={styles.input}
           placeholder="Price"
-          value={price}
-          onChangeText={setPrice}
+          value={productPrice}
+          onChangeText={setProductPrice}
           keyboardType="numeric"
         />
         <TextInput
           style={styles.input}
           placeholder="Condition"
-          value={condition}
-          onChangeText={setCondition}
+          value={productCondition}
+          onChangeText={setProductCondition}
         />
         <TextInput
           style={styles.input}
           placeholder="Tags"
-          value={tags}
-          onChangeText={setTags}
+          value={productTags}
+          onChangeText={setProductTags}
         />
         <TextInput
           style={[styles.input, styles.descriptionInput]}
           placeholder="Description"
-          value={description}
-          onChangeText={setDescription}
+          value={productDescription}
+          onChangeText={setProductDescription}
           multiline
         />
-        <Button title="Submit" onPress={handleSubmit} />
+        <Button title="Submit" onPress={handleUpload} />
       </ScrollView>
       <Navbar />
     </SafeAreaView>
@@ -92,26 +137,26 @@ const CreateNewListing = () => {
 };
 
 const styles = StyleSheet.create({
-    safeArea: {
-      flex: 1,
-    },
-    container: {
-      flexGrow: 1,
-      backgroundColor: '#fff',
-      padding: 20,
-      paddingBottom: 60, // Adjust padding to accommodate the navbar
-    },
-    input: {
-      height: 40,
-      borderColor: 'red',
-      borderWidth: 1,
-      marginBottom: 20,
-      paddingHorizontal: 10,
-    },
-    descriptionInput: {
-      height: 100,
-      textAlignVertical: 'top',
-    },
-  });
+  safeArea: {
+    flex: 1,
+  },
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#fff',
+    padding: 20,
+    paddingBottom: 60, // Adjust padding to accommodate the navbar
+  },
+  input: {
+    height: 40,
+    borderColor: 'red',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  descriptionInput: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
+});
 
 export default CreateNewListing;
