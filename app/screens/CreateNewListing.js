@@ -137,42 +137,26 @@ const CreateNewListing = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#ffffff',
-    },
-    scrollViewContent: {
-      flexGrow: 1,
-      paddingVertical: 20,
-      paddingHorizontal: 16,
-    },
-    imagePickerContainer: {
-      marginBottom: 20,
-    },
-    image: {
-      width: 200,
-      height: 200,
-      marginHorizontal: 8,
-      borderRadius: 8,
-    },
-    input: {
-      height: 40,
-      borderColor: '#cccccc',
-      borderWidth: 1,
-      marginBottom: 20,
-      paddingHorizontal: 10,
-      borderRadius: 8,
-    },
-    descriptionInput: {
-      height: 100,
-      textAlignVertical: 'top',
-    },
-    uploadButton: {
-      backgroundColor: '#007bff',
-      paddingVertical: 12,
-      borderRadius: 8,
-      alignItems: 'center', 
-    }
-}); 
+  safeArea: {
+    flex: 1,
+  },
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#fff',
+    padding: 20,
+    paddingBottom: 60, // Adjust padding to accommodate the navbar
+  },
+  input: {
+    height: 40,
+    borderColor: 'red',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  descriptionInput: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
+});
 
 export default CreateNewListing;
