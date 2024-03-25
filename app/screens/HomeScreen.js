@@ -7,17 +7,14 @@ const HomeScreen = ({ route }) => {
 
 
     const dummyList = [
-        { itemName: 'tst', cost: 10 },
-        { itemName: 'tst2', name: 20 },
-        { itemName: 'battle cats', name: 100.50 },
+        { name: 'Textbook', price: 50, imageURI: 'https://example.com/product1.jpg'},
+        { name: 'Shower Caddy', price: 15, imageURI: ''},
+        { name: 'Shoe Rack', price: 40, imageURI: "https://example.com/product3.jpg"},
+        { name: "Biology Textbook", price: 40,  imageUri: "https://example.com/product4.jpg"},
+        { name: 'Desk Organizer', price: 30, imageURI: 'https://example.com/product3.jpg'},
+        { name: 'T-Shirt', price: 15, imageURI: 'https://example.com/product4.jpg'},
         // ...more items
     ];
-
-    /**                <View style = {{ flexDirection: 'row'}}> 
-                    <OfferBar /> 
-                    <OfferBar cost={15} itemName={"test"}/>
-                    <OfferBar cost={100.50} itemName={"battle cats"}/>
-                </View> */
 
 
     return (
@@ -34,17 +31,10 @@ const HomeScreen = ({ route }) => {
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.offerBarContainer}>
                     <View style={styles.row}>
-                        <ProductCard name="Textbook" price={50} imageUri="https://example.com/product1.jpg" />
-                        <ProductCard name="Shower Caddy" price={15} imageUri="" />
+                        {dummyList.map((item) => (
+                            <ProductCard name={item.name} price={item.price} imageUri={item.imageURI} />
+                        ))}
                     </View>
-                    <View style={styles.row}>
-                        <ProductCard name="Shoe Rack" price={40} imageUri="https://example.com/product3.jpg" />
-                        <ProductCard name="Biology Textbook" price={55} imageUri="https://example.com/product4.jpg" />
-                    </View> 
-                    <View style={styles.row}>
-                        <ProductCard name="Desk Organizer" price={30} imageUri="https://example.com/product3.jpg" />
-                        <ProductCard name="T-Shirt" price={15} imageUri="https://example.com/product4.jpg" />
-                    </View> 
                     {/* Add more rows of ProductCard components as needed */}
                 </View>
             </ScrollView>
@@ -103,6 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 10,
+        flexWrap: 'wrap',
     },
     navbarContainer: {
         position: 'absolute',

@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     margin: 10,
-    width: '45%', // Adjust width as needed
+    width: '44%', // Adjust width as needed
   },
   image: {
     width: '100%',
