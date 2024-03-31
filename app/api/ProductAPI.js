@@ -27,7 +27,14 @@ export async function updateProduct(productId, updatedData){
         if (!(await getDoc(product)).exists()) throw new Error('Product not found');
 
         //updates product with new data
+        const { condition, description, images, name, price, tags } =  updatedData;
+        // checks if there is at least one image
+        if(!Array.isArray(images) || images.length  == 0 ) throw new Error('Must upload at least one image');
+        // ensures name is not null
+        if(!name) throw new Error('Name cannot be empty');
+
         await updateDoc(product, updatedData);
+
         return{message: 'Successfully updated'};
         
     }catch(err){
