@@ -5,12 +5,17 @@ import * as ImagePicker from 'expo-image-picker';
 import Navbar from '../components/Navbar';
 import { collection, addDoc } from "firebase/firestore";  
 import { useNavigation } from '@react-navigation/core';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+
+
 
 const CreateNewListing = () => {
   const [productName, setProductName] = useState('');
   const [productPrice, setProductPrice] = useState('');
   const [productCondition, setProductCondition] = useState('');
   const [productDescription, setProductDescription] = useState('');
+  const [productDate, setProductDate] = useState(new Date());
   const [productTags, setProductTags] = useState('');
   const [images, setImages] = useState([]);
   const [userId, setUserId] = useState(null); 
@@ -25,7 +30,7 @@ const CreateNewListing = () => {
       multiple: true, // Allow multiple image selection
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       const selectedImages = result.assets.map(asset => asset.uri);
       setImages(prevImages => [...prevImages, ...selectedImages]);
     }
@@ -69,6 +74,7 @@ const CreateNewListing = () => {
         tags: productTags,
         images: images, // Assign the array of images to the 'images' key
         userId: userId,
+        date:productDate,
       });
       console.log('Document written with ID: ', docRef.id);
       // Reset form fields after successful submission
@@ -78,6 +84,7 @@ const CreateNewListing = () => {
       setProductTags('');
       setProductDescription('');
       setImages([]);
+      setProductDate('');
 
       alert('Product added successfully!'); 
       navigation.navigate('ProfileScreen');
@@ -136,6 +143,20 @@ const CreateNewListing = () => {
           onChangeText={setProductDescription}
           multiline
         />
+        {/* Date picker component */}
+        <DateTimePicker
+          style={styles.input}
+          value={productDate}
+          mode="date"
+          onChange={(event, selectedDate) => {
+            const currentDate = selectedDate || productDate;
+            setProductDate(currentDate);
+          }}
+        />
+        {/* Conditional rendering for date display */}
+        <Text>{productDate === new Date() ? 'Select Date' : `Date Selected: ${productDate.toDateString()}`}</Text>
+
+         
         <Button title="Submit" onPress={handleUpload} />
       </ScrollView>
       <Navbar />
