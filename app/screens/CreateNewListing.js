@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image, Text } from 'react-native';
+import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image, Text, TouchableOpacity } from 'react-native';
 import { fdb, auth } from '../config/firebaseSetup';
 import * as ImagePicker from 'expo-image-picker';
 import Navbar from '../components/Navbar';
 import { collection, addDoc } from "firebase/firestore";  
 import { useNavigation } from '@react-navigation/core';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
 
 
 
@@ -105,44 +104,59 @@ const CreateNewListing = () => {
       </View>
 
       <ScrollView contentContainerStyle={styles.container}>
-        <Button title="Pick Images" onPress={pickImages} />
+        <Button title="Pick Images" style={styles.button} onPress={pickImages} />
+        {/* The button look on IOS is kind of ugly, but refactoring it into a touchableOpacity would require 
+          some workaround. */}
         <ScrollView horizontal>
           {images.map((uri, index) => (
             <Image key={index} source={{ uri }} style={{ width: 200, height: 200, margin: 5 }} />
           ))}
         </ScrollView>
+
+        <Text style={styles.inputLabel}> Product Name </Text>
         <TextInput
           style={styles.input}
-          placeholder="Product Name"
+          placeholder="Enter the name of your product"
           value={productName}
           onChangeText={setProductName}
         />
+
+        <Text style={styles.inputLabel}> Price </Text>
         <TextInput
           style={styles.input}
-          placeholder="Price"
+          placeholder="Enter the price of your product in USD"
           value={productPrice}
           onChangeText={setProductPrice}
           keyboardType="numeric"
         />
+
+        <Text style={styles.inputLabel}> Condition </Text>
         <TextInput
           style={styles.input}
-          placeholder="Condition"
+          placeholder="Describe the condition of your item"
           value={productCondition}
           onChangeText={setProductCondition}
         />
+
+        <Text style={styles.inputLabel}> Tags </Text>
         <TextInput
           style={styles.input}
-          placeholder="Tags"
+          placeholder="Add relevant keywords or phrases"
           value={productTags}
           onChangeText={setProductTags}
         />
+
+
+        <Text style={styles.inputLabel}> Description </Text>
         <TextInput
           style={[styles.input, styles.descriptionInput]}
-          placeholder="Description"
+          placeholder="Provide detailed information about your product"
           value={productDescription}
           onChangeText={setProductDescription}
           multiline
         />
+
+        <Text style={styles.inputLabel}> Date </Text>
         {/* Date picker component */}
         <DateTimePicker
           style={styles.input}
@@ -183,12 +197,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
 
   },
+  inputLabel: {
+    fontFamily: 'ralewaybold',
+  },  
+  button: {
+    borderWidth: 3,
+    borderColor: "blue",
+    borderRadius: 5,
+    alignItems: 'center',
+    width: '10%',
+  },
   input: {
     height: 40,
-    borderColor: 'red',
+    borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+    fontFamily: 'ralewaylight',
+    borderRadius: 5,
   },
   descriptionInput: {
     height: 100,
