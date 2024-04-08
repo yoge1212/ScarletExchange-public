@@ -96,6 +96,16 @@ const CreateNewListing = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+
+      {/* Back Button */}
+      <View style={styles.container}>
+      <View style={styles.backButtonContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Text style={styles.backButtonText}>Back</Text>
+        </TouchableOpacity>
+      </View>
+      </View>
+
       <View style={[styles.container2]}>
         <Text style={[styles.name, {fontSize: 20}]}>
             New Item
@@ -182,6 +192,24 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+
+  backButtonContainer: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    alignItems: 'flex-start',
+  },
+  backButton: {
+    backgroundColor: '#e7e7e7',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#d3d3d3',
+  },
+  backButtonText: {
+    color: '#000000',
+    fontSize: 16,
   },
   container: {
     flexGrow: 1,
