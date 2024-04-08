@@ -1,11 +1,23 @@
-import React from 'react';
-import { StyleSheet, View, Image, Text } from 'react-native';
+import React, { useState }  from 'react';
+import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 
 const ProductCard = ({ name, price, imageUri }) => {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+  };
   return (
     <View style={styles.container}>
       <Image source={{ uri: imageUri }} style={styles.image} />
+      <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
+        <Image 
+          source={isFavorite ? require('../assets/filledheart.png') : require('../assets/heart.png')} // Replace with your heart icon image paths
+          style={styles.favoriteIcon}
+        />
+      </TouchableOpacity>
       <View style={styles.details}>
+      <View style={styles.separator}></View> 
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.price}>${price}</Text>
       </View>
@@ -16,35 +28,48 @@ const ProductCard = ({ name, price, imageUri }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    borderRadius: 20,
+
     elevation: 5,
-    margin: 10,
-    width: '44%', // Adjust width as needed
+    margin: 5,
+    marginBottom: 20,
+    width: '46%',
+    borderColor: '#000', // Black border color
+    borderWidth: 1, // Border width
+     // Adjust width as needed
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 160,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
   details: {
     padding: 10,
   },
+  separator: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 60, // Adjust as needed
+    height: 1,
+    backgroundColor: '#000',
+  },
   name: {
+    fontFamily: 'ralewaybold',
     fontSize: 16,
-    fontWeight: 'bold',
     marginBottom: 5,
   },
   price: {
     fontSize: 14,
-    color: 'green',
+    fontFamily: 'ralewaylight',
+    color: 'black',
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
   },
 });
 
