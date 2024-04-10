@@ -30,7 +30,7 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen">
+      <Stack.Navigator initialRouteName="LoginScreen">
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }}/> 
         <Stack.Screen name="SavedProductsScreen" component={SavedProductsScreen} options={{ headerShown: false }}/>  
         <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ headerShown: false }}/>  
