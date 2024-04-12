@@ -79,7 +79,7 @@ export async function readProductListing(productId){
 export async function updateProduct(productId, updatedData){
     try{
         //fetches product by userId
-        const product = doc(fdb, "Products", productId);
+        const product = doc(fdb, "products", productId);
         //checks if the product being fetched exists
         if (!(await getDoc(product)).exists()) throw new Error('Product not found');
 

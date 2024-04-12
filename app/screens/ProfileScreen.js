@@ -22,7 +22,7 @@ const ProfileScreen = ({ route }) => {
     const [userData, setUserData] = useState(null);
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfileScreen'); // Navigate to EditProfileScreen
+    navigation.navigate('EditProfileScreen', {userId: user.uid}); // Navigate to EditProfileScreen
   };
 
   const handleCreateNewListing = () => {
