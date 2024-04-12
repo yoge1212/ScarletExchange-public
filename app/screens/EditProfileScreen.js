@@ -11,7 +11,7 @@ const EditProfileScreen = () => {
     console.log(navigation);
     const route = useRoute();
     const userId = route.params?.userId;
-
+    //retrieves the userId parameter passed through to this screen from navigate
 
     const editedData = {
         email: 'new_email@gmail.com',
@@ -19,13 +19,17 @@ const EditProfileScreen = () => {
         lname: 'lastname',
         userImg: null,
     };
+    //hardcoded data with edited information
     const handleEditProfileScreen = async () => {
         try{
             const resp = await editProfile(userId, editedData);
+            //calls api method
             if (resp.success){
                 alert('Profile successfully edited');
+                //alerts if method response is successful
             } else{
                 console.log(resp.message);
+                //returns error in executing api endpoint
             }
         } catch (error) {
             alert('error');
