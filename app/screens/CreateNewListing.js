@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image, Text, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { fdb, auth } from '../config/firebaseSetup';
 import * as ImagePicker from 'expo-image-picker';
 import Navbar from '../components/Navbar';
@@ -60,6 +60,18 @@ const CreateNewListing = () => {
     return unsubscribe;
   }, []);
 
+
+  const ImageButton = () => {
+    return (
+      <View style={{height: 120, width: 120, borderWidth: 2}}> 
+        <TouchableOpacity style={[styles.container2, {height: 120, width: 120, borderWidth: 2, flex:1}]}>
+          <Image resizeMode="contain" source = {require('../assets/plus.png')} style={[styles.image, {height: 46, width: 46}]}/>
+        {/*<Button title="Pick Images" style={styles.button} onPress={pickImages} /> */}
+        </TouchableOpacity>
+      </View>
+
+    );
+  };
   const handleUpload = async () => { 
 
     console.log(images)
@@ -121,8 +133,11 @@ const CreateNewListing = () => {
           IMAGES/VIDEO
         </Text>
       </View>
+      <View style = {[{marginLeft: 21, marginTop: 18}]}>
+        <ImageButton />
 
-      <Button title="Pick Images" style={styles.button} onPress={pickImages} />
+      </View>
+
         {/* The button look on IOS is kind of ugly, but refactoring it into a touchableOpacity would require 
           some workaround. */}
         <ScrollView horizontal>
