@@ -98,23 +98,31 @@ const CreateNewListing = () => {
     <SafeAreaView style={styles.safeArea}>
 
       {/* Back Button */}
-      <View style={styles.container}>
       <View style={styles.backButtonContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
       </View>
-      </View>
-
-      <View style={[styles.container2]}>
-        <Text style={[styles.name, {fontSize: 20}]}>
-            New Item
+      <View style={[styles.headerContainer, {marginBottom: 17, marginLeft: 21}]}>
+        <Image resizeMode="contain" source = {require('../assets/close.png')} style={[styles.image, {width: 22, height: 22}]}/>
+        <TouchableOpacity style={{marginLeft: 200}}>
+          <Text style = {[styles.inputLabel]}> 
+            SAVE
           </Text>
-          <Image resizeMode="contain" source = {require('../assets/editIcon.png')} style={styles.image}/>
+        </TouchableOpacity>
+        <TouchableOpacity style= {{marginLeft: 24}}>
+          <Text style = {[styles.inputLabel]}> 
+            PUBLISH
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={[styles.headerContainer, {marginLeft: 21, borderBottomWidth: 2}]}>
+        <Text style = {[styles.inputLabel]}> 
+          IMAGES/VIDEO
+        </Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <Button title="Pick Images" style={styles.button} onPress={pickImages} />
+      <Button title="Pick Images" style={styles.button} onPress={pickImages} />
         {/* The button look on IOS is kind of ugly, but refactoring it into a touchableOpacity would require 
           some workaround. */}
         <ScrollView horizontal>
@@ -122,6 +130,8 @@ const CreateNewListing = () => {
             <Image key={index} source={{ uri }} style={{ width: 200, height: 200, margin: 5 }} />
           ))}
         </ScrollView>
+
+      <ScrollView contentContainerStyle={styles.container}>
 
         <Text style={styles.inputLabel}> Product Name </Text>
         <TextInput
@@ -198,6 +208,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 10,
     alignItems: 'flex-start',
+    marginBottom: 20,
   },
   backButton: {
     backgroundColor: '#e7e7e7',
@@ -225,8 +236,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
 
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 24,
+    marginBottom: 5,
+    marginRight: 24,
+  },
   inputLabel: {
     fontFamily: 'ralewaybold',
+    fontSize: 16,
+    marginBottom: 2,
   },  
   button: {
     borderWidth: 3,
