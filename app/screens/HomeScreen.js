@@ -1,9 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 import ProductCard from '../components/ProductCard'; 
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar'; 
+import { useNavigation } from '@react-navigation/native';
 
-const HomeScreen = ({ route }) => {
+const HomeScreen = ({ route }) => { 
+
+    const navigation = useNavigation();
 
     console.log()
     const dummyList = [
@@ -79,7 +82,12 @@ const HomeScreen = ({ route }) => {
                 <View style={styles.offerBarContainer}>
                     <View style={styles.row}>
                         {dummyList.map((item) => (
-                            <ProductCard name={item.name} price={item.price} Image={item.Image} />
+                           <ProductCard
+                           name={item.name}
+                           price={item.price}
+                           imageUri={item.imageUri}
+                           onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
+                         />
                         ))}
                     </View>
                     {/* Add more rows of ProductCard components as needed */}

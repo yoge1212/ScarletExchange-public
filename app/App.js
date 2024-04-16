@@ -11,6 +11,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import EditProfileScreen  from './screens/EditProfileScreen';
 import CreateNewListing from './screens/CreateNewListing';
 import ProductDetailScreen from './screens/ProductDetails';
+import DraftsPage from './screens/DraftsPage';
 
 
 const Stack = createNativeStackNavigator();
@@ -40,7 +41,8 @@ export default function App() {
         <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }}/>  
         <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }}/>  
         <Stack.Screen name="PasswordResetConfirm" component={PasswordResetConfirm} options={{ headerShown: false }}/> 
-        <Stack.Screen name="ProductDetails" component={ProductDetailScreen} options={{ headerShown: false }}/>  
+        <Stack.Screen name="ProductDetails" component={ProductDetailScreen} options={{ headerShown: false }}/> 
+        <Stack.Screen name="DraftsPage" component={DraftsPage} options={{ headerShown: false }}/>  
       </Stack.Navigator>
     </NavigationContainer>
   );

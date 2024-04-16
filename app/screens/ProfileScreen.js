@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
+  Dimensions,
 } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
@@ -19,39 +20,28 @@ const ProfileScreen = ({ route }) => {
     const [user, setUser] = useState(null);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState(null); 
+
+  const goToDrafts = () => {
+    navigation.navigate('DraftsPage');
+  };
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfileScreen', {userId: user.uid}); // Navigate to EditProfileScreen
+    navigation.navigate('EditProfileScreen', {userId: user.uid});
   };
 
   const handleCreateNewListing = () => {
-    navigation.navigate('CreateNewListing'); // Navigate to CreateNewListingScreen
+    navigation.navigate('CreateNewListing');
   };
-
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        fetchUserData(user.uid);
-        fetchProducts(user.uid);
-      } else {
-        setUser(null);
-        // Handle if the user is not authenticated
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const fetchUserData = async (userId) => {
     try {
       const docRef = doc(fdb, 'users', userId);
       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        setUserData(docSnap.data());
+      if (docSnap.exists()) { 
+        const userData = docSnap.data();
+        setUserData(userData);
       } else {
         console.log('No such document!');
       }
@@ -81,52 +71,55 @@ const ProfileScreen = ({ route }) => {
       }
   };
 
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        fetchUserData(user.uid);
+        fetchProducts(user.uid);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-        showsVerticalScrollIndicator={false}
-      >
-        {user && (
-          <>
-            <Image
-              style={styles.userImg}
-              source={{
-                uri: userData?.userImg || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsvRezh6gJwbRNHueze-bhw3PmbmIX4KoLcw&usqp=CAU',
-              }} 
-              defaultSource={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsvRezh6gJwbRNHueze-bhw3PmbmIX4KoLcw&usqp=CAU'}
-            />
-            <Text style={styles.userName}>{userData?.fname || 'Test'} {userData?.lname || 'User'}</Text>
-            <TouchableOpacity style={styles.actionButton} onPress={handleEditProfile}>
-              <Text style={styles.actionButtonText}>Edit Profile</Text>
-            </TouchableOpacity> 
-            <TouchableOpacity style={styles.actionButton} onPress={handleCreateNewListing}>
-              <Text style={styles.actionButtonText}>Create New Listing</Text>
-            </TouchableOpacity>
-            <View style={styles.userInfoWrapper}>
-              <View style={styles.userInfoItem}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Image
+            style={styles.userImg}
+            source={{
+              uri: userData?.userImg || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsvRezh6gJwbRNHueze-bhw3PmbmIX4KoLcw&usqp=CAU',
+            }}
+          />
+          <Text style={styles.userName}>{userData?.fname || 'Test'} {userData?.lname || 'User'}</Text>
+          <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+            <Text style={styles.editButtonText}>Edit Profile</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.gridContainer}>
+          <TouchableOpacity style={styles.draftButton} onPress={goToDrafts}>
+            <Text style={styles.draftButtonText}>Drafts</Text>
+          </TouchableOpacity>
+          {products.map((product) => (
+            <TouchableOpacity
+              key={product.id}
+              style={styles.productContainer}
+              onPress={() => navigation.navigate('ProductDetails', { productId: product.id })}
+            >
+              <View style={styles.productImageContainer}>
+                <Image
+                  source={{ uri: product.images[0] }}
+                  style={styles.productThumbnail}
+                />
               </View>
-              {/* Add more user info items as needed */}
-            </View>
-            {products.length === 0 ? (
-              <Text>No products listed by the user.</Text>
-            ) : 
-              products.map((product) => (
-                <TouchableOpacity
-                  key={product.id}
-                  style={styles.productContainer}
-                  onPress={() => navigation.navigate('ProductDetails', { productId: product.id })}
-                >
-                  <Image
-                    source={{ uri: product.thumbnail }}
-                    style={styles.productThumbnail}
-                  />
-                </TouchableOpacity>
-              ))
-            }
-          </>
-        )}
+            </TouchableOpacity>
+          ))}
+        </View>
       </ScrollView>
       <Navbar />
     </SafeAreaView>
@@ -135,40 +128,17 @@ const ProfileScreen = ({ route }) => {
 
 export default ProfileScreen;
 
+const numColumns = 3;
+
 const styles = StyleSheet.create({
-    productsContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-      },
-    productContainer: {
-        margin: 10,
-      },
-    productThumbnail: {
-        width: 150,
-        height: 150,
-        borderRadius: 10,
-      },
-    container: {
-    flex: 1,
+  container: {
+    flexGrow: 1,
     backgroundColor: '#fff',
     padding: 20,
   },
-  actionButton: {
-    backgroundColor: '#2e64e5',
-    borderRadius: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginVertical: 10,
-    alignSelf: 'stretch',
+  header: {
     alignItems: 'center',
-  },
-  actionButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    marginBottom: 20,
   },
   userImg: {
     height: 150,
@@ -181,31 +151,52 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  aboutUser: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#666',
-    textAlign: 'center',
+  editButton: {
+    backgroundColor: '#2e64e5',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  editButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  draftButton: {
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 10,
+    width: (Dimensions.get('window').width - 60) / numColumns,
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 10,
   },
-  userInfoWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginVertical: 20,
-  },
-  userInfoItem: {
-    justifyContent: 'center',
-  },
-  userInfoTitle: {
-    fontSize: 20,
+  draftButtonText: {
     fontWeight: 'bold',
-    marginBottom: 5,
-    textAlign: 'center',
+    fontSize: 18,
+    color: '#2e64e5',
   },
-  userInfoSubTitle: {
-    fontSize: 12,
-    color: '#666',
-    textAlign: 'center',
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  productContainer: {
+    width: (Dimensions.get('window').width - 60) / numColumns,
+    marginBottom: 10,
+  },
+  productImageContainer: {
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  productThumbnail: {
+    width: '100%',
+    height: 150,
   },
 });

@@ -1,14 +1,15 @@
 import React, { useState }  from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 
-const ProductCard = ({ name, price, imageUri }) => {
+const ProductCard = ({ name, price, imageUri , onPress }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
   };
-  return (
-    <View style={styles.container}>
+  return ( 
+    <TouchableOpacity onPress={onPress} style={styles.container}>
+    <View>
       <Image source={{ uri: imageUri }} style={styles.image} />
       <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
         <Image 
@@ -21,7 +22,8 @@ const ProductCard = ({ name, price, imageUri }) => {
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.price}>${price}</Text>
       </View>
-    </View>
+    </View> 
+    </TouchableOpacity>
   );
 };
 

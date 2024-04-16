@@ -3,8 +3,8 @@ import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image, T
 import { fdb, auth } from '../config/firebaseSetup';
 import * as ImagePicker from 'expo-image-picker';
 import Navbar from '../components/Navbar';
-import { collection, addDoc } from "firebase/firestore";  
-import { useNavigation } from '@react-navigation/core';
+import { collection, addDoc, getDoc, setDoc, doc } from "firebase/firestore";  
+import { useNavigation, useRoute} from '@react-navigation/core';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
@@ -14,11 +14,11 @@ const CreateNewListing = () => {
   const [productPrice, setProductPrice] = useState('');
   const [productCondition, setProductCondition] = useState('');
   const [productDescription, setProductDescription] = useState('');
-  const [productDate, setProductDate] = useState(new Date());
   const [productTags, setProductTags] = useState('');
   const [images, setImages] = useState([]);
   const [userId, setUserId] = useState(null); 
-  const navigation = useNavigation();
+  const navigation = useNavigation(); 
+  const route = useRoute();
 
   const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,6 +46,40 @@ const CreateNewListing = () => {
     if (!result.cancelled) {
       setImages([...images, result.uri]);
     }
+  }; 
+
+  const handleSaveDraft = async () => {
+    try {
+      const draftData = {
+        name: productName,
+        price: productPrice,
+        condition: productCondition,
+        description: productDescription,
+        tags: productTags,
+        images: images,
+        userId: userId,
+      };
+  
+      const draftId = route.params?.draftId; // Get the existing draft ID from route params
+  
+      if (draftId) {
+        // Update the existing draft
+        const draftRef = doc(collection(fdb, 'drafts'), draftId);
+        await setDoc(draftRef, draftData, { merge: true }); // Use setDoc to update the existing draft
+        console.log('Draft updated with ID: ', draftId);
+        alert('Draft updated successfully!');
+      } else {
+        // Add a new draft
+        const newDraftRef = await addDoc(collection(fdb, 'drafts'), draftData);
+        console.log('Draft saved with ID: ', newDraftRef.id);
+        alert('Draft saved successfully!');
+      }
+  
+      navigation.navigate('ProfileScreen');
+    } catch (error) {
+      console.error('Error saving draft: ', error);
+      alert('Failed to save draft. Please try again.');
+    }
   };
 
   useEffect(() => {
@@ -57,14 +91,25 @@ const CreateNewListing = () => {
       }
     });
 
+    // Fill out fields with draft data if available
+    const draft = route.params?.draft;
+    if (draft) {
+      setProductName(draft.name || '');
+      setProductPrice(draft.price || '');
+      setProductCondition(draft.condition || '');
+      setProductDescription(draft.description || '');
+      setProductTags(draft.tags || '');
+      setImages(draft.images || []);
+    }
+
     return unsubscribe;
-  }, []);
+  }, [route.params?.draft]);
 
 
   const ImageButton = () => {
     return (
       <View style={{height: 120, width: 120, borderWidth: 2}}> 
-        <TouchableOpacity style={[styles.container2, {height: 120, width: 120, borderWidth: 2, flex:1}]}>
+        <TouchableOpacity style={[styles.container2, { height: 120, width: 120, borderWidth: 2, flex: 1 }]} onPress={pickImages}>
           <Image resizeMode="contain" source = {require('../assets/plus.png')} style={[styles.image, {height: 46, width: 46}]}/>
         {/*<Button title="Pick Images" style={styles.button} onPress={pickImages} /> */}
         </TouchableOpacity>
@@ -77,15 +122,16 @@ const CreateNewListing = () => {
     console.log(images)
 
     try {
+      const currentDate = new Date(); 
       const docRef = await addDoc(collection(fdb, 'products'), {
         name: productName,
         price: productPrice,
         condition: productCondition,
         description: productDescription,
         tags: productTags,
-        images: images, // Assign the array of images to the 'images' key
+        images: images,
         userId: userId,
-        date:productDate,
+        date: currentDate,
       });
       console.log('Document written with ID: ', docRef.id);
       // Reset form fields after successful submission
@@ -95,7 +141,6 @@ const CreateNewListing = () => {
       setProductTags('');
       setProductDescription('');
       setImages([]);
-      setProductDate('');
 
       alert('Product added successfully!'); 
       navigation.navigate('ProfileScreen');
@@ -117,12 +162,12 @@ const CreateNewListing = () => {
       </View>
       <View style={[styles.headerContainer, {marginBottom: 17, marginLeft: 21}]}>
         <Image resizeMode="contain" source = {require('../assets/close.png')} style={[styles.image, {width: 22, height: 22}]}/>
-        <TouchableOpacity style={{marginLeft: 200}}>
+        <TouchableOpacity onPress={handleSaveDraft} style={{marginLeft: 200}}>
           <Text style = {[styles.inputLabel]}> 
             SAVE
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style= {{marginLeft: 24}}>
+        <TouchableOpacity onPress={handleUpload} style= {{marginLeft: 24}}>
           <Text style = {[styles.inputLabel]}> 
             PUBLISH
           </Text>
@@ -190,23 +235,6 @@ const CreateNewListing = () => {
           onChangeText={setProductDescription}
           multiline
         />
-
-        <Text style={styles.inputLabel}> Date </Text>
-        {/* Date picker component */}
-        <DateTimePicker
-          style={styles.input}
-          value={productDate}
-          mode="date"
-          onChange={(event, selectedDate) => {
-            const currentDate = selectedDate || productDate;
-            setProductDate(currentDate);
-          }}
-        />
-        {/* Conditional rendering for date display */}
-        <Text>{productDate === new Date() ? 'Select Date' : `Date Selected: ${productDate.toDateString()}`}</Text>
-
-         
-        <Button title="Submit" onPress={handleUpload} />
       </ScrollView>
       <Navbar />
     </SafeAreaView>
