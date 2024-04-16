@@ -106,7 +106,7 @@ const CreateNewListing = () => {
   }, [route.params?.draft]);
 
 
-  const ImageButton = () => {
+  const ImageButton = props => {
     return (
       <View style={{height: 120, width: 120, borderWidth: 2}}> 
         <TouchableOpacity style={[styles.container2, { height: 120, width: 120, borderWidth: 2, flex: 1 }]} onPress={pickImages}>
@@ -174,13 +174,19 @@ const CreateNewListing = () => {
         </TouchableOpacity>
       </View>
       <View style={[styles.headerContainer, {marginLeft: 21, borderBottomWidth: 2}]}>
-        <Text style = {[styles.inputLabel]}> 
+        <Text style = {[styles.inputLabel, {color: 'black'}]}> 
           IMAGES/VIDEO
         </Text>
       </View>
-      <View style = {[{marginLeft: 21, marginTop: 18}]}>
-        <ImageButton />
-
+      <View style = {[styles.row, {marginLeft: 21, marginTop: 18, marginRight: 24}]}>
+        <ImageButton color='#FF6767'/>
+        <ImageButton color='black'/>
+        <ImageButton color='black'/>
+        <ImageButton color='black'/>
+        <ImageButton color='black'/>
+        <ImageButton color='black'/>
+        <Text style={[styles.smallText, {color: '#FF6767'}]}>one photo/video required</Text>
+        <Text style = {[styles.smallText]}>(drag to reorder)</Text>
       </View>
 
         {/* The button look on IOS is kind of ugly, but refactoring it into a touchableOpacity would require 
@@ -192,8 +198,12 @@ const CreateNewListing = () => {
         </ScrollView>
 
       <ScrollView contentContainerStyle={styles.container}>
+        {/* Note: add stars to unfilled fields and the FF6767 color for unfilled fields */}
+        <View style = {{borderBottomWidth: 2, marginBottom: 16}}>
+        <Text style={[styles.inputLabel, {color:'black', marginBottom: 6}]}> Product Information </Text>
+        </View>
 
-        <Text style={styles.inputLabel}> Product Name </Text>
+        <Text style={styles.inputLabel}> Product Name *</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter the name of your product"
@@ -201,7 +211,7 @@ const CreateNewListing = () => {
           onChangeText={setProductName}
         />
 
-        <Text style={styles.inputLabel}> Price </Text>
+        <Text style={styles.inputLabel}> Price *</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter the price of your product in USD"
@@ -209,8 +219,8 @@ const CreateNewListing = () => {
           onChangeText={setProductPrice}
           keyboardType="numeric"
         />
-
-        <Text style={styles.inputLabel}> Condition </Text>
+        {/* Note: make this a dropdown, and a cropdown for category as well */}
+        <Text style={styles.inputLabel}> Condition *</Text>
         <TextInput
           style={styles.input}
           placeholder="Describe the condition of your item"
@@ -218,7 +228,7 @@ const CreateNewListing = () => {
           onChangeText={setProductCondition}
         />
 
-        <Text style={styles.inputLabel}> Tags </Text>
+        <Text style={styles.inputLabel}> Category </Text>
         <TextInput
           style={styles.input}
           placeholder="Add relevant keywords or phrases"
@@ -270,6 +280,12 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 60, // Adjust padding to accommodate the navbar
   },
+  dottedBorder: {
+    borderStyle: 'dotted',
+    borderColor:'#FF6767',
+    borderRadius: 6,
+    borderWidth: 2,
+  },
   container2: {
     padding: 10,
     borderBottomWidth: 2,
@@ -289,7 +305,8 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontFamily: 'ralewaybold',
     fontSize: 16,
-    marginBottom: 2,
+    marginBottom: 6,
+    color: '#FF6767',
   },  
   button: {
     borderWidth: 3,
@@ -300,7 +317,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#FF6767',
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
@@ -320,6 +337,16 @@ const styles = StyleSheet.create({
     width: '10%',
     height: undefined,
     aspectRatio: 1,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    flexWrap: 'wrap',
+  },
+  smallText: {
+    fontFamily: 'ralewaylight',
+    fontSize: 12,
   }
 });
 
