@@ -114,10 +114,11 @@ const CreateNewListing = () => {
 
   const ImageButton = props => {
     return (
-      <View style={{height: 120, width: 120, borderWidth: 2}}> 
-        <TouchableOpacity style={[styles.container2, { height: 120, width: 120, borderWidth: 2, flex: 1 }]} onPress={pickImages}>
-          <Image resizeMode="contain" source = {require('../assets/plus.png')} style={[styles.image, {height: 46, width: 46}]}/>
-        {/*<Button title="Pick Images" style={styles.button} onPress={pickImages} /> */}
+      <View style = {{marginBottom: 10}}> 
+        <TouchableOpacity onPress={pickImages} style={[styles.container2, styles.dottedBorder,
+           {height: 110, width: 110, borderColor: `${props.color}`,justifyContent: 'center', alignItems: 'center'}]
+           }>
+          <Image resizeMode="contain" source = {require('../assets/plus.png')} style={[styles.image, {height:35, width: 35}]}/>
         </TouchableOpacity>
       </View>
 
