@@ -5,14 +5,20 @@ import * as ImagePicker from 'expo-image-picker';
 import Navbar from '../components/Navbar';
 import { collection, addDoc, getDoc, setDoc, doc } from "firebase/firestore";  
 import { useNavigation, useRoute} from '@react-navigation/core';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 
 const CreateNewListing = () => {
+
+
+  const [productCondition, setProductCondition] = useState('');
+  const conditions = ['New', 'Used (Very Good)', 'Used (Good)', 'Used (Bad)'];
+
   const [productName, setProductName] = useState('');
   const [productPrice, setProductPrice] = useState('');
-  const [productCondition, setProductCondition] = useState('');
+  //const [productCondition, setProductCondition] = useState('');
   const [productDescription, setProductDescription] = useState('');
   const [productTags, setProductTags] = useState('');
   const [images, setImages] = useState([]);
@@ -215,22 +221,32 @@ const CreateNewListing = () => {
           onChangeText={setProductPrice}
           keyboardType="numeric"
         />
-        {/* Note: make this a dropdown, and a cropdown for category as well */}
-        <Text style={styles.inputLabel}> Condition *</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Describe the condition of your item"
-          value={productCondition}
-          onChangeText={setProductCondition}
-        />
+        {/*this is now a dropdown to select condition*/}
+        <SafeAreaView style={styles.safeArea}>
+        <View style={styles.inputContainer}>
+        <Text style={[styles.inputLabel, { marginBottom: 1 }]}>Item's Condition *</Text>
+        <Picker
+          selectedValue={productCondition}
+          onValueChange={(itemValue) => setProductCondition(itemValue)}>
+          {conditions.map((condition, index) => ( //uses the picker and the 
+          //condition states that we have in the beg to map it
+            <Picker.Item key={index} label={condition} value={condition} />
+          ))}
+        </Picker>
+      </View>
+      </SafeAreaView>
 
-        <Text style={styles.inputLabel}> Category </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Add relevant keywords or phrases"
-          value={productTags}
-          onChangeText={setProductTags}
-        />
+      <Text style={[styles.inputLabel, { marginBottom: 1 }]}>Select Item's Category *</Text>
+    <Picker
+    selectedValue={productTags} //using the picker to have tags for the different categories 
+    onValueChange={(itemValue) => setProductTags(itemValue)}> 
+    <Picker.Item label="Textbook" value="Textbook" />  
+    <Picker.Item label="Clothing" value="Clothing" />
+    <Picker.Item label="Dorm Essentials" value="Dorm Essentials" />
+    <Picker.Item label="Technology" value="Technology" />
+    <Picker.Item label="Miscellaneous" value="Miscellaneous" />
+        </Picker>
+
 
 
         <Text style={styles.inputLabel}> Description </Text>
