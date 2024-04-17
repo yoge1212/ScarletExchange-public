@@ -10,6 +10,7 @@ const HomeScreen = ({ route }) => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [noProductsFound, setNoProductsFound] = useState(false);
 
 
     console.log()
@@ -43,6 +44,14 @@ const HomeScreen = ({ route }) => {
             //sets to lower case
         );
         setFilteredProducts(filtered); // shows the filtered products based on Squery
+            //edge case if no products are found for the search
+        if (filtered.length === 0) {
+            // if no products: message to the user
+            setNoProductsFound(true);
+        } else {
+            // if products: reset it
+            setNoProductsFound(false);
+        }
     };
 
     return (
@@ -96,33 +105,36 @@ const HomeScreen = ({ route }) => {
                 </View>
             </View>
 
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>
-    <View style={styles.offerBarContainer}>
-        <View style={styles.row}>
-            {searchQuery === '' ? ( //if the sQuery is empty, then it will return dummyList items on the homepage
-                dummyList.map((item, index) => (
-                    <ProductCard
-                        key={index}   //displays all these fields 
-                        name={item.name}
-                        price={item.price}
-                        imageUri={item.imageUri}
-                        onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
-                    />
-                ))
-            ) : (
-                filteredProducts.map((item, index) => (  //but if the search isn't emoty, then it will return the filtered items
-                    <ProductCard
-                        key={index}
-                        name={item.name}
-                        price={item.price}
-                        imageUri={item.imageUri}
-                        onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
-                    />
-                ))
-            )}
+            <View>
+    {noProductsFound && <Text>No Products Found</Text>}
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.offerBarContainer}>
+            <View style={styles.row}>
+                {searchQuery === '' ? (
+                    dummyList.map((item, index) => (
+                        <ProductCard
+                            key={index}
+                            name={item.name}
+                            price={item.price}
+                            imageUri={item.imageUri}
+                            onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
+                        />
+                    ))
+                ) : (
+                    filteredProducts.map((item, index) => (
+                        <ProductCard
+                            key={index}
+                            name={item.name}
+                            price={item.price}
+                            imageUri={item.imageUri}
+                            onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
+                        />
+                    ))
+                )}
+            </View>
         </View>
-    </View>
-</ScrollView>
+    </ScrollView>
+</View>
 
 
             <Navbar />
