@@ -1,12 +1,16 @@
-import React from 'react';
+
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 import ProductCard from '../components/ProductCard'; 
 import Navbar from '../components/Navbar'; 
 import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 
 const HomeScreen = ({ route }) => { 
 
     const navigation = useNavigation();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState([]);
+
 
     console.log()
     const dummyList = [
@@ -30,6 +34,16 @@ const HomeScreen = ({ route }) => {
         { name: 'T-Shirt', price: 15, imageURI: 'https://example.com/product4.jpg'},
         // ...more items
     ];
+
+    const handleSearchInputChange = (text) => {
+        setSearchQuery(text); // set the text as paramter for sQuery
+        // now within the product items that we have, filter using sQuery
+        const filtered = dummyList.filter(item =>
+            item.name.toLowerCase().includes(text.toLowerCase())
+            //sets to lower case
+        );
+        setFilteredProducts(filtered); // shows the filtered products based on Squery
+    };
 
     return (
         <SafeAreaView style={styles.container}> 
@@ -60,7 +74,11 @@ const HomeScreen = ({ route }) => {
                 style={styles.searchIcon}
                 resizeMode="contain"
             />
-                    <TextInput style={styles.searchInput} placeholder="Search..." />
+                    <TextInput style={styles.searchInput} 
+                    placeholder="Search..."
+                    value={searchQuery} 
+                    onChangeText={handleSearchInputChange}
+                    />
                     <TouchableOpacity style = {styles.sortButton}> 
                     <Image 
                         source={require('../assets/sort.png')} // Replace with your image path
@@ -79,20 +97,33 @@ const HomeScreen = ({ route }) => {
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                <View style={styles.offerBarContainer}>
-                    <View style={styles.row}>
-                        {dummyList.map((item) => (
-                           <ProductCard
-                           name={item.name}
-                           price={item.price}
-                           imageUri={item.imageUri}
-                           onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
-                         />
-                        ))}
-                    </View>
-                    {/* Add more rows of ProductCard components as needed */}
-                </View>
-            </ScrollView>
+    <View style={styles.offerBarContainer}>
+        <View style={styles.row}>
+            {searchQuery === '' ? ( //if the sQuery is empty, then it will return dummyList items on the homepage
+                dummyList.map((item, index) => (
+                    <ProductCard
+                        key={index}   //displays all these fields 
+                        name={item.name}
+                        price={item.price}
+                        imageUri={item.imageUri}
+                        onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
+                    />
+                ))
+            ) : (
+                filteredProducts.map((item, index) => (  //but if the search isn't emoty, then it will return the filtered items
+                    <ProductCard
+                        key={index}
+                        name={item.name}
+                        price={item.price}
+                        imageUri={item.imageUri}
+                        onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
+                    />
+                ))
+            )}
+        </View>
+    </View>
+</ScrollView>
+
 
             <Navbar />
         </SafeAreaView>

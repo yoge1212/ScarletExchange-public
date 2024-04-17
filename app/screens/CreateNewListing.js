@@ -181,10 +181,6 @@ const CreateNewListing = () => {
       <View style = {[styles.row, {marginLeft: 21, marginTop: 18, marginRight: 24}]}>
         <ImageButton color='#FF6767'/>
         <ImageButton color='black'/>
-        <ImageButton color='black'/>
-        <ImageButton color='black'/>
-        <ImageButton color='black'/>
-        <ImageButton color='black'/>
         <Text style={[styles.smallText, {color: '#FF6767'}]}>one photo/video required</Text>
         <Text style = {[styles.smallText]}>(drag to reorder)</Text>
       </View>
