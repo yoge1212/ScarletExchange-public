@@ -2,6 +2,8 @@ import { fdb } from "../config/firebaseSetup";
 import { doc,collection, getDoc, updateDoc } from "firebase/firestore";
 import React, { useState } from 'react';
 import * as ImagePicker from "expo-image-picker";
+import * as firebase from 'firebase/app';
+import 'firebase/storage';
 export async function editProfile(userId, editedData){
     try{
         const profile = doc(fdb, "users", userId);
@@ -29,26 +31,27 @@ export async function uploadProfileImg(userId, Img){
         if (status != "granted"){
             alert("Permission denied");
         } else {
-            const result = await ImagePicker.launchImageLibraryAsync({mediaTypes: ImagePicker.MediaTypeOptions.Images});
+                  try {
+                      const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images });
 
-            if(!result.cancelled) {
-                Img = result.uri;
-                console.log("Successfully set image to uploaded image");
-            }
-            else{
-                alert("Image launch unsuccessful");
-            }
-        }
-    try{
-            const profile = doc(fdb, "users", userId);
-            const profileSnapShot = await getDoc(profile);
-            if(!profileSnapShot.exists()) throw new Error('User not found');
+                      if (!result.canceled) {
 
-            await updateDoc(profile, Img);
+                          const uploadResponse = await uploadImageToExternalService(result.uri);
+                          const imageUrl = uploadResponse.data.imageUrl;
+                          if (!uploadResponse.error) {
+                              const profileRef = doc(fdb, "users", userId);
+                              const resp = await updateDoc(profileRef, { userImg: imageUrl });
+                              console.log("Successfully set image to uploaded image");
+                          } else {
+                              console.error("Error uploading", error);
+                          }
 
-            return{message: 'Profile successfully edited'}
-
-        }catch(error){
-            return error;
-        }
+                      } else {
+                          alert("Image launch unsuccessful");
+                      }
+                  } catch (error) {
+                      console.error("Unsuccessful image upload", error);
+                      return { error };
+                  }
+              }
 }

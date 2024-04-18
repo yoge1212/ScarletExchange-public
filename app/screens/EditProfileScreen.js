@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { fetch } from 'node-fetch';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { editProfile, uploadProfileImg } from '../api/ProfileAPI';
-
+import * as ImagePicker from "expo-image-picker";
 const EditProfileScreen = () => {
     const navigation = useNavigation();
     console.log(navigation);
@@ -19,12 +19,11 @@ const EditProfileScreen = () => {
                         email,
                         fname,
                         lname,
-                        userImg: null,
+                        userImg,
                     };
     const [successScreen, setSuccessScreen] = useState(false);
 
 
-    //hardcoded data with edited information
     const handleEditProfileScreen = async () => {
         try{
             console.log("reached here");
@@ -45,21 +44,22 @@ const EditProfileScreen = () => {
     };
     const Img = null;
     const handleUploadProfileImg = async () => {
-            try{
-                const resp = await uploadProfileImg(userId, Img);
-                //calls api method
-                if (resp.success){
-                    alert('Profile image uploaded successfully');
-                    //alerts if method response is successful
-                } else{
-                    console.log(resp.message);
-                    //returns error in executing the editing of profile
-                }
-            } catch (error) {
-                alert('error');
-                console.error(error);
-            }
-        };
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        const newSelectedImage = result.assets.map(asset => asset.uri);
+        setUserImg(prevImg => newSelectedImage);
+        await editProfile(userId, editedData);
+        } else {
+            console.error('Error uploading image:', uploadResponse.error);
+          }
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
 
@@ -137,6 +137,7 @@ const EditProfileScreen = () => {
             </SafeAreaView>
     )
 }
+export default EditProfileScreen;
 const SuccessMessage = ({message}) => {
         console.log("success screen set");
         return(
@@ -245,4 +246,3 @@ const styles = StyleSheet.create({
   }
 });
 
-export default EditProfileScreen;
