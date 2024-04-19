@@ -27,12 +27,15 @@ const ProfileScreen = ({ route }) => {
   };
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfileScreen', {userId: user.uid});
+
+    navigation.navigate('EditProfileScreen', {userId: user.uid}); // Navigate to EditProfileScreen
+
   };
 
   const handleCreateNewListing = () => {
     navigation.navigate('CreateNewListing');
   };
+
 
   const fetchUserData = async (userId) => {
     try {
@@ -49,6 +52,7 @@ const ProfileScreen = ({ route }) => {
       console.error('Error fetching user data:', error);
     }
   };
+
 
   const fetchProducts = async (userId) => {
     try {
@@ -69,11 +73,18 @@ const ProfileScreen = ({ route }) => {
       } finally {
         setLoading(false);
       }
+      /*const fetchUpdatedProfileData = async (userId) => {
+        try {*/
   };
 
   useEffect(() => {
+    const success = route.params?.setSuccess;
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if(success){
+            setUserData(null);
+            fetchUserData(user.uid);
+          }
       if (user) {
         setUser(user);
         fetchUserData(user.uid);
