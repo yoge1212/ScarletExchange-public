@@ -23,6 +23,7 @@ const ProfileScreen = ({ route }) => {
 
   const handleEditProfile = () => {
     navigation.navigate('EditProfileScreen', {userId: user.uid}); // Navigate to EditProfileScreen
+
   };
 
   const handleCreateNewListing = () => {
@@ -31,7 +32,13 @@ const ProfileScreen = ({ route }) => {
 
   useEffect(() => {
     const auth = getAuth();
+
+    const success = route.params?.setSuccess;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if(success){
+            setUserData(null);
+            fetchUserData(user.uid);
+          }
       if (user) {
         setUser(user);
         fetchUserData(user.uid);
@@ -60,6 +67,7 @@ const ProfileScreen = ({ route }) => {
     }
   };
 
+
   const fetchProducts = async (userId) => {
     try {
         const q = query(collection(fdb, 'products'), where('userId', '==', userId));
@@ -79,6 +87,8 @@ const ProfileScreen = ({ route }) => {
       } finally {
         setLoading(false);
       }
+      /*const fetchUpdatedProfileData = async (userId) => {
+        try {*/
   };
 
   return (

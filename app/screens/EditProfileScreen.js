@@ -15,14 +15,13 @@ const EditProfileScreen = () => {
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const [userImg, setUserImg] = useState('');
-    const editedData = {
-                        email,
-                        fname,
-                        lname,
-                        userImg,
-                    };
+    const editedData = {};
+    if (email !== '') editedData.email = email;
+    if (fname !== '') editedData.fname = fname;
+    if (lname !== '') editedData.lname = lname;
+    if (userImg !== '') editedData.userImg = userImg
     const [successScreen, setSuccessScreen] = useState(false);
-
+    const [success, setSuccess] = useState(false);
 
     const handleEditProfileScreen = async () => {
         try{
@@ -32,6 +31,8 @@ const EditProfileScreen = () => {
             //calls api method
             if (!resp.error){
                 setSuccessScreen(true);
+                setSuccess(true);
+                navigation.goBack();
                 //alerts if method response is successful
             } else{
                 console.log(resp.message);
@@ -56,7 +57,7 @@ const EditProfileScreen = () => {
         setUserImg(prevImg => newSelectedImage);
         await editProfile(userId, editedData);
         } else {
-            console.error('Error uploading image:', uploadResponse.error);
+            console.error('Error uploading image:', error);
           }
     };
 
@@ -90,7 +91,7 @@ const EditProfileScreen = () => {
                 <Text style={[styles.inputLabel, {color:'black', marginBottom: 6}]}> Profile Information </Text>
                 </View>
 
-                <Text style={styles.inputLabel}> Edit Email *</Text>
+                <Text style={styles.inputLabel}> Edit Email </Text>
                 <TextInput
                   style={styles.input}
                   placeholder="Set new email"
@@ -98,7 +99,7 @@ const EditProfileScreen = () => {
                   onChangeText={setEmail}
                 />
 
-                <Text style={styles.inputLabel}> Edit First Name *</Text>
+                <Text style={styles.inputLabel}> Edit First Name </Text>
                 <TextInput
                   style={styles.input}
                   placeholder="Set new first name"
@@ -106,7 +107,7 @@ const EditProfileScreen = () => {
                   onChangeText={setFname}
                 />
                 {/* Note: make this a dropdown, and a cropdown for category as well */}
-                <Text style={styles.inputLabel}> Edit Last Name *</Text>
+                <Text style={styles.inputLabel}> Edit Last Name </Text>
                 <TextInput
                   style={styles.input}
                   placeholder="Set new last name"
@@ -114,15 +115,12 @@ const EditProfileScreen = () => {
                   onChangeText={setLname}
                 />
 
-                <Button title="Submit" onPress={handleEditProfileScreen} />
                <View style={styles.container}>
-                           <Text style={styles.header}>
-                               Add Image:
-                           </Text>
-                           <TouchableOpacity style={styles.button}
+
+                           <TouchableOpacity style={styles.backButton}
                                onPress={handleUploadProfileImg}>
                                <Text style={styles.backButtonText}>
-                                   Choose Image
+                                   Upload Image
                                </Text>
                            </TouchableOpacity>
 
@@ -130,9 +128,12 @@ const EditProfileScreen = () => {
                                    <Image source={{ uri: Img }}
                                        style={styles.image} />
                                </View>
+                           <Button title="Submit" onPress={handleEditProfileScreen} />
+                                          {successScreen && <SuccessMessage message= 'Profile updated' />}
                        </View>
+
               </ScrollView>
-              {successScreen && <SuccessMessage message= 'Profile updated' />}
+
               <Navbar />
             </SafeAreaView>
     )
