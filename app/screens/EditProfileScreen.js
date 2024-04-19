@@ -32,7 +32,7 @@ const EditProfileScreen = () => {
             if (!resp.error){
                 setSuccessScreen(true);
                 setSuccess(true);
-                navigation.goBack();
+                navigation.navigate('HomeScreen');
                 //alerts if method response is successful
             } else{
                 console.log(resp.message);
