@@ -1,9 +1,17 @@
-import React from 'react';
+
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 import ProductCard from '../components/ProductCard'; 
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar'; 
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 
-const HomeScreen = ({ route }) => {
+const HomeScreen = ({ route }) => { 
+
+    const navigation = useNavigation();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [noProductsFound, setNoProductsFound] = useState(false);
+
 
     console.log()
     const dummyList = [
@@ -27,6 +35,24 @@ const HomeScreen = ({ route }) => {
         { name: 'T-Shirt', price: 15, imageURI: 'https://example.com/product4.jpg'},
         // ...more items
     ];
+
+    const handleSearchInputChange = (text) => {
+        setSearchQuery(text); // set the text as paramter for sQuery
+        // now within the product items that we have, filter using sQuery
+        const filtered = dummyList.filter(item =>
+            item.name.toLowerCase().includes(text.toLowerCase())
+            //sets to lower case
+        );
+        setFilteredProducts(filtered); // shows the filtered products based on Squery
+            //edge case if no products are found for the search
+        if (filtered.length === 0) {
+            // if no products: message to the user
+            setNoProductsFound(true);
+        } else {
+            // if products: reset it
+            setNoProductsFound(false);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}> 
@@ -57,7 +83,11 @@ const HomeScreen = ({ route }) => {
                 style={styles.searchIcon}
                 resizeMode="contain"
             />
-                    <TextInput style={styles.searchInput} placeholder="Search..." />
+                    <TextInput style={styles.searchInput} 
+                    placeholder="Search..."
+                    value={searchQuery} 
+                    onChangeText={handleSearchInputChange}
+                    />
                     <TouchableOpacity style = {styles.sortButton}> 
                     <Image 
                         source={require('../assets/sort.png')} // Replace with your image path
@@ -75,16 +105,37 @@ const HomeScreen = ({ route }) => {
                 </View>
             </View>
 
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                <View style={styles.offerBarContainer}>
-                    <View style={styles.row}>
-                        {dummyList.map((item) => (
-                            <ProductCard name={item.name} price={item.price} Image={item.Image} />
-                        ))}
-                    </View>
-                    {/* Add more rows of ProductCard components as needed */}
-                </View>
-            </ScrollView>
+            <View>
+    {noProductsFound && <Text>No Products Found</Text>}
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.offerBarContainer}>
+            <View style={styles.row}>
+                {searchQuery === '' ? (
+                    dummyList.map((item, index) => (
+                        <ProductCard
+                            key={index}
+                            name={item.name}
+                            price={item.price}
+                            imageUri={item.imageUri}
+                            onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
+                        />
+                    ))
+                ) : (
+                    filteredProducts.map((item, index) => (
+                        <ProductCard
+                            key={index}
+                            name={item.name}
+                            price={item.price}
+                            imageUri={item.imageUri}
+                            onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
+                        />
+                    ))
+                )}
+            </View>
+        </View>
+    </ScrollView>
+</View>
+
 
             <Navbar />
         </SafeAreaView>

@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, ScrollView, StyleSheet, SafeAreaView, Image, Text, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { fdb, auth } from '../config/firebaseSetup';
 import * as ImagePicker from 'expo-image-picker';
 import Navbar from '../components/Navbar';
-import { collection, addDoc } from "firebase/firestore";  
-import { useNavigation } from '@react-navigation/core';
+import { collection, addDoc, getDoc, setDoc, doc } from "firebase/firestore";  
+import { useNavigation, useRoute} from '@react-navigation/core';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 
 const CreateNewListing = () => {
+
+
+  const [productCondition, setProductCondition] = useState('');
+  const conditions = ['New', 'Used (Very Good)', 'Used (Good)', 'Used (Bad)'];
+
   const [productName, setProductName] = useState('');
   const [productPrice, setProductPrice] = useState('');
-  const [productCondition, setProductCondition] = useState('');
+  //const [productCondition, setProductCondition] = useState('');
   const [productDescription, setProductDescription] = useState('');
-  const [productDate, setProductDate] = useState(new Date());
   const [productTags, setProductTags] = useState('');
   const [images, setImages] = useState([]);
   const [userId, setUserId] = useState(null); 
-  const navigation = useNavigation();
+  const navigation = useNavigation(); 
+  const route = useRoute();
 
   const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,6 +52,40 @@ const CreateNewListing = () => {
     if (!result.cancelled) {
       setImages([...images, result.uri]);
     }
+  }; 
+
+  const handleSaveDraft = async () => {
+    try {
+      const draftData = {
+        name: productName,
+        price: productPrice,
+        condition: productCondition,
+        description: productDescription,
+        tags: productTags,
+        images: images,
+        userId: userId,
+      };
+  
+      const draftId = route.params?.draftId; // Get the existing draft ID from route params
+  
+      if (draftId) {
+        // Update the existing draft
+        const draftRef = doc(collection(fdb, 'drafts'), draftId);
+        await setDoc(draftRef, draftData, { merge: true }); // Use setDoc to update the existing draft
+        console.log('Draft updated with ID: ', draftId);
+        alert('Draft updated successfully!');
+      } else {
+        // Add a new draft
+        const newDraftRef = await addDoc(collection(fdb, 'drafts'), draftData);
+        console.log('Draft saved with ID: ', newDraftRef.id);
+        alert('Draft saved successfully!');
+      }
+  
+      navigation.navigate('ProfileScreen');
+    } catch (error) {
+      console.error('Error saving draft: ', error);
+      alert('Failed to save draft. Please try again.');
+    }
   };
 
   useEffect(() => {
@@ -57,23 +97,48 @@ const CreateNewListing = () => {
       }
     });
 
-    return unsubscribe;
-  }, []);
+    // Fill out fields with draft data if available
+    const draft = route.params?.draft;
+    if (draft) {
+      setProductName(draft.name || '');
+      setProductPrice(draft.price || '');
+      setProductCondition(draft.condition || '');
+      setProductDescription(draft.description || '');
+      setProductTags(draft.tags || '');
+      setImages(draft.images || []);
+    }
 
+    return unsubscribe;
+  }, [route.params?.draft]);
+
+
+  const ImageButton = props => {
+    return (
+      <View style = {{marginBottom: 10}}> 
+        <TouchableOpacity onPress={pickImages} style={[styles.container2, styles.dottedBorder,
+           {height: 110, width: 110, borderColor: `${props.color}`,justifyContent: 'center', alignItems: 'center'}]
+           }>
+          <Image resizeMode="contain" source = {require('../assets/plus.png')} style={[styles.image, {height:35, width: 35}]}/>
+        </TouchableOpacity>
+      </View>
+
+    );
+  };
   const handleUpload = async () => { 
 
     console.log(images)
 
     try {
+      const currentDate = new Date(); 
       const docRef = await addDoc(collection(fdb, 'products'), {
         name: productName,
         price: productPrice,
         condition: productCondition,
         description: productDescription,
         tags: productTags,
-        images: images, // Assign the array of images to the 'images' key
+        images: images,
         userId: userId,
-        date:productDate,
+        date: currentDate,
       });
       console.log('Document written with ID: ', docRef.id);
       // Reset form fields after successful submission
@@ -83,7 +148,6 @@ const CreateNewListing = () => {
       setProductTags('');
       setProductDescription('');
       setImages([]);
-      setProductDate('');
 
       alert('Product added successfully!'); 
       navigation.navigate('ProfileScreen');
@@ -98,23 +162,36 @@ const CreateNewListing = () => {
     <SafeAreaView style={styles.safeArea}>
 
       {/* Back Button */}
-      <View style={styles.container}>
       <View style={styles.backButtonContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
       </View>
-      </View>
-
-      <View style={[styles.container2]}>
-        <Text style={[styles.name, {fontSize: 20}]}>
-            New Item
+      <View style={[styles.headerContainer, {marginBottom: 17, marginLeft: 21}]}>
+        <Image resizeMode="contain" source = {require('../assets/close.png')} style={[styles.image, {width: 22, height: 22}]}/>
+        <TouchableOpacity onPress={handleSaveDraft} style={{marginLeft: 200}}>
+          <Text style = {[styles.inputLabel]}> 
+            SAVE
           </Text>
-          <Image resizeMode="contain" source = {require('../assets/editIcon.png')} style={styles.image}/>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleUpload} style= {{marginLeft: 24}}>
+          <Text style = {[styles.inputLabel]}> 
+            PUBLISH
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={[styles.headerContainer, {marginLeft: 21, borderBottomWidth: 2}]}>
+        <Text style = {[styles.inputLabel, {color: 'black'}]}> 
+          IMAGES/VIDEO
+        </Text>
+      </View>
+      <View style = {[styles.row, {marginLeft: 21, marginTop: 18, marginRight: 24}]}>
+        <ImageButton color='#FF6767'/>
+        <ImageButton color='black'/>
+        <Text style={[styles.smallText, {color: '#FF6767'}]}>one photo/video required</Text>
+        <Text style = {[styles.smallText]}>(drag to reorder)</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <Button title="Pick Images" style={styles.button} onPress={pickImages} />
         {/* The button look on IOS is kind of ugly, but refactoring it into a touchableOpacity would require 
           some workaround. */}
         <ScrollView horizontal>
@@ -123,7 +200,13 @@ const CreateNewListing = () => {
           ))}
         </ScrollView>
 
-        <Text style={styles.inputLabel}> Product Name </Text>
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Note: add stars to unfilled fields and the FF6767 color for unfilled fields */}
+        <View style = {{borderBottomWidth: 2, marginBottom: 16}}>
+        <Text style={[styles.inputLabel, {color:'black', marginBottom: 6}]}> Product Information </Text>
+        </View>
+
+        <Text style={styles.inputLabel}> Product Name *</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter the name of your product"
@@ -131,7 +214,7 @@ const CreateNewListing = () => {
           onChangeText={setProductName}
         />
 
-        <Text style={styles.inputLabel}> Price </Text>
+        <Text style={styles.inputLabel}> Price *</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter the price of your product in USD"
@@ -139,22 +222,32 @@ const CreateNewListing = () => {
           onChangeText={setProductPrice}
           keyboardType="numeric"
         />
+        {/*this is now a dropdown to select condition*/}
+        <SafeAreaView style={styles.safeArea}>
+        <View style={styles.inputContainer}>
+        <Text style={[styles.inputLabel, { marginBottom: 1 }]}>Item's Condition *</Text>
+        <Picker
+          selectedValue={productCondition}
+          onValueChange={(itemValue) => setProductCondition(itemValue)}>
+          {conditions.map((condition, index) => ( //uses the picker and the 
+          //condition states that we have in the beg to map it
+            <Picker.Item key={index} label={condition} value={condition} />
+          ))}
+        </Picker>
+      </View>
+      </SafeAreaView>
 
-        <Text style={styles.inputLabel}> Condition </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Describe the condition of your item"
-          value={productCondition}
-          onChangeText={setProductCondition}
-        />
+      <Text style={[styles.inputLabel, { marginBottom: 1 }]}>Select Item's Category *</Text>
+    <Picker
+    selectedValue={productTags} //using the picker to have tags for the different categories 
+    onValueChange={(itemValue) => setProductTags(itemValue)}> 
+    <Picker.Item label="Textbook" value="Textbook" />  
+    <Picker.Item label="Clothing" value="Clothing" />
+    <Picker.Item label="Dorm Essentials" value="Dorm Essentials" />
+    <Picker.Item label="Technology" value="Technology" />
+    <Picker.Item label="Miscellaneous" value="Miscellaneous" />
+        </Picker>
 
-        <Text style={styles.inputLabel}> Tags </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Add relevant keywords or phrases"
-          value={productTags}
-          onChangeText={setProductTags}
-        />
 
 
         <Text style={styles.inputLabel}> Description </Text>
@@ -165,23 +258,6 @@ const CreateNewListing = () => {
           onChangeText={setProductDescription}
           multiline
         />
-
-        <Text style={styles.inputLabel}> Date </Text>
-        {/* Date picker component */}
-        <DateTimePicker
-          style={styles.input}
-          value={productDate}
-          mode="date"
-          onChange={(event, selectedDate) => {
-            const currentDate = selectedDate || productDate;
-            setProductDate(currentDate);
-          }}
-        />
-        {/* Conditional rendering for date display */}
-        <Text>{productDate === new Date() ? 'Select Date' : `Date Selected: ${productDate.toDateString()}`}</Text>
-
-         
-        <Button title="Submit" onPress={handleUpload} />
       </ScrollView>
       <Navbar />
     </SafeAreaView>
@@ -198,6 +274,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 10,
     alignItems: 'flex-start',
+    marginBottom: 20,
   },
   backButton: {
     backgroundColor: '#e7e7e7',
@@ -216,6 +293,12 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 60, // Adjust padding to accommodate the navbar
   },
+  dottedBorder: {
+    borderStyle: 'dotted',
+    borderColor:'#FF6767',
+    borderRadius: 6,
+    borderWidth: 2,
+  },
   container2: {
     padding: 10,
     borderBottomWidth: 2,
@@ -225,8 +308,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
 
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 24,
+    marginBottom: 5,
+    marginRight: 24,
+  },
   inputLabel: {
     fontFamily: 'ralewaybold',
+    fontSize: 16,
+    marginBottom: 6,
+    color: '#FF6767',
   },  
   button: {
     borderWidth: 3,
@@ -237,7 +330,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#FF6767',
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
@@ -257,6 +350,16 @@ const styles = StyleSheet.create({
     width: '10%',
     height: undefined,
     aspectRatio: 1,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    flexWrap: 'wrap',
+  },
+  smallText: {
+    fontFamily: 'ralewaylight',
+    fontSize: 12,
   }
 });
 
