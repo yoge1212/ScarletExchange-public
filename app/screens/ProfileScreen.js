@@ -368,6 +368,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: -10,
     marginBottom: 20,
+    marginLeft: 20
+
   },
   productContainer: {
     borderWidth: 1,
@@ -375,6 +377,7 @@ const styles = StyleSheet.create({
     height: 130,
     width: 130,
     marginBottom: 10,
+    marginRight: 35,
     border: 10,
     overflow: 'hidden',
   },
