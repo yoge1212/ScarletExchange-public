@@ -60,9 +60,28 @@ const ProductDetailScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
+          <View style = {styles.topRow}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+           <Image 
+                        source={require('../assets/backBtn.png')} 
+                        style={styles.newItemPicture}
+                    />
+
+           
+      </TouchableOpacity> 
+
+      <TouchableOpacity style={styles.backButton}>
+           <Image 
+                        source={require('../assets/editIcon.png')} 
+                        style={styles.editIcon}
+                    />
+
+           
+      </TouchableOpacity> 
+
+          </View>
+
+      
       
       <View style={styles.carouselContainer}>
         <TouchableOpacity onPress={goToPreviousImage} style={[styles.navigationButton, { left: 0 }]}>
@@ -95,11 +114,40 @@ const ProductDetailScreen = ({ route, navigation }) => {
       
       <View style={styles.content}>
         <Text style={styles.productName}>{product.name}</Text>
-        <Text style={styles.productPrice}>Price: ${product.price}</Text>
-        <Text style={styles.productCondition}>Condition: {product.condition}</Text>
-        <Text style={styles.productDescription}>{product.description}</Text>
-        <Text style={styles.productTags}>Tags: {product.tags}</Text>
+        <Text style={styles.productPrice}> ${product.price}</Text>
+        <View style={styles.content2}>
+          <Text style={styles.productCondition}>Condition: </Text>
+          <Text style={styles.conditonText}>{product.condition}</Text>
+        </View>
+
+      
+        <Image  style={styles.line}
+                        source={require('../assets/line.png')} 
+                    />
+         <View style = {styles.content2}>
+         <Text style={styles.productTags}>Category:</Text>
+         <Text style={styles.textbookText}>{product.tags}</Text>
+
+          
+        </View>
+        
+        <Image style={styles.line}
+                        source={require('../assets/line.png')} 
+                    />
+        <Text style={styles.productDescription}>Description: {product.description}</Text>
+        
+        
       </View>
+
+      <View style={styles.archive}>
+      <TouchableOpacity style={styles.archiveItem} >
+
+<Text style={styles.archiveText}>Archive Item</Text>
+
+</TouchableOpacity>
+        
+         </View>
+      
       
       <Navbar />
     </SafeAreaView>
@@ -111,48 +159,81 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 50
+
+  },
   backButton: {
+    paddingRight: 250,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    position: 'absolute',
     top: 20,
     left: 20,
     zIndex: 1,
   },
-  backButtonText: {
-    color: '#000',
-    fontSize: 16,
+  editIcon: {
+    width: 24,
+    height: 24
   },
+
   content: {
+    flexDirection: 'column',
     padding: 20,
   },
   productName: {
+    fontFamily: 'ralewaybold',
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   productPrice: {
+    fontFamily: 'ralewaylight',
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 30,
   },
   productCondition: {
+    fontFamily: 'ralewaylight',
     fontSize: 16,
     marginBottom: 10,
+  },
+  conditonText: {
+    fontFamily: 'ralewaylight',
+    fontSize: 16,
+    paddingLeft: 145
+  },
+  textbookText: {
+    fontFamily: 'ralewaylight',
+    fontSize: 16,
+    paddingLeft: 150
   },
   productDescription: {
+    fontFamily: 'ralewaylight',
     fontSize: 16,
     marginBottom: 10,
+  },
+  content2: {
+    flexDirection: 'row',
+
   },
   productTags: {
+    fontFamily: 'ralewaylight',
     fontSize: 16,
     marginBottom: 10,
   },
+  line: {
+    width: 350,
+    marginBottom: 10
+  },
   carouselContainer: {
-    height: 200,
+    paddingHorizontal: 20,
+    height: 250,
     marginBottom: 20,
   },
   productImage: {
-    width: 300, // Adjust the width of each image as needed
+    
+    borderRadius: 20,
+    width: 350, // Adjust the width of each image as needed
     height: '100%', // Make each image take up the full height of the carousel
   },
   navigationButton: {
@@ -167,6 +248,25 @@ const styles = StyleSheet.create({
   navigationButtonText: {
     color: '#fff',
     fontSize: 24,
+  },
+  archive: {
+    marginTop: 50,
+    justifyContent: 'center', // Center content vertically
+    alignItems: 'center',
+  },
+  archiveItem: {
+    alignItems: 'center',   // Aligns children horizontally
+  justifyContent: 'center', // Aligns children vertically
+  borderWidth: 1,
+  borderRadius: 10,
+  borderColor: 'black',
+  width: '80%', // Set the width to take up the full container width
+  height: 40, // Set a fixed height or adjust as needed
+    
+
+  },
+  archiveText: {
+    fontFamily: 'ralewaylight',
   },
 });
 

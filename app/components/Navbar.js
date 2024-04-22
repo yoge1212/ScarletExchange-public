@@ -36,7 +36,7 @@ const Navbar = () => {
         <TouchableOpacity style={styles.navItem} onPress={() => navigateToScreen('ProfileScreen')}>
           <Image 
             source={require('../assets/profile.png')} // Replace with your image path
-            style={styles.headerImage}
+          
             resizeMode="cover"
           />
         </TouchableOpacity>

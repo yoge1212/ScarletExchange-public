@@ -26,6 +26,10 @@ const ProfileScreen = ({ route }) => {
     navigation.navigate('DraftsPage');
   };
 
+  const goToNewItem = () => {
+    navigation.navigate('CreateNewListing');
+  };
+
   const handleEditProfile = () => {
 
     navigation.navigate('EditProfileScreen', {userId: user.uid}); // Navigate to EditProfileScreen
@@ -108,12 +112,93 @@ const ProfileScreen = ({ route }) => {
             }}
           />
           <Text style={styles.userName}>{userData?.fname || 'Test'} {userData?.lname || 'User'}</Text>
-          <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
-            <Text style={styles.editButtonText}>Edit Profile</Text>
+
+          <View style={styles.starsContainer}>
+          <Image 
+                source={require('../assets/star.png')} 
+                style={styles.stars}
+                resizeMode="cover"
+            />
+            <Image 
+                source={require('../assets/star.png')} 
+                style={styles.stars}
+                resizeMode="cover"
+            />
+            <Image 
+                source={require('../assets/star.png')} 
+                style={styles.stars}
+                resizeMode="cover"
+            />
+            <Image 
+                source={require('../assets/star.png')} 
+                style={styles.stars}
+                resizeMode="cover"
+            />
+            <Image 
+                source={require('../assets/star.png')} 
+                style={styles.stars}
+                resizeMode="cover"
+            />
+
+          <TouchableOpacity style={styles.button} >
+            <Text style={styles.Text}>(2 REVIEWS)</Text>
           </TouchableOpacity>
+
+            
+          </View>
+
+          <View style={styles.profilebar}>
+          <TouchableOpacity style={styles.preferences} onPress={handleEditProfile}>
+          <Image 
+                        source={require('../assets/settings.png')} 
+                        resizeMode="cover"
+                        style={styles.preferences}
+                    />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.analytics} >
+          <Image 
+                        source={require('../assets/analytics.png')} 
+                        resizeMode="cover"
+                        style={styles.analytics}
+                    />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.history} >
+          <Image 
+                        source={require('../assets/history.png')}
+                        resizeMode="cover"
+                        style={styles.history}
+                    />
+          </TouchableOpacity>
+
+          </View>
+
+          <View style = {styles.textbar}>
+            <Text style = {styles.preferencesText}> PREFERENCES</Text>
+            <Text style = {styles.analyticsText}> ANALYTICS</Text>
+            <Text style = {styles.historyText}> HISTORY</Text>
+
+          </View>
+            
+          <TouchableOpacity style={styles.newItem} onPress={goToNewItem}>
+          <Image 
+                        source={require('../assets/newItem.png')} 
+                        style={styles.newItemPicture}
+                    />
+            <Text style={styles.itemText}>  | Create New Item</Text>
+            
+          </TouchableOpacity>
+
+          
+          
         </View>
         <View style={styles.gridContainer}>
           <TouchableOpacity style={styles.draftButton} onPress={goToDrafts}>
+          <Image 
+                        source={require('../assets/folder.png')} 
+                        style={styles.folderIcon}
+                    />
             <Text style={styles.draftButtonText}>Drafts</Text>
           </TouchableOpacity>
           {products.map((product) => (
@@ -152,15 +237,97 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   userImg: {
-    height: 150,
-    width: 150,
+    height: 120,
+    width: 120,
     borderRadius: 75,
   },
   userName: {
+    fontFamily: "ralewaybold",
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 10,
+
+  },
+
+  starsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+
+  Text: {
+    fontFamily: 'ralewaylight',
+    color: 'red',
+    padding: 10,
+    
+  },
+
+  profilebar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+
+  textbar: {
+
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 10,
+    paddingHorizontal: 20
+    
+  },
+  preferences: {
+    marginRight: 30, 
+  },
+  
+  analytics: {
+    marginRight: 30, 
+  },
+  
+  history: {
+    
+  },
+
+  preferencesText: {
+    fontSize: 10,
+    fontFamily: 'ralewaylight',
+  
+
+  
+  },
+
+  analyticsText: {
+    fontSize: 10,
+    fontFamily: 'ralewaylight',
+    marginHorizontal: 25,
+    marginRight: 30
+    
+
+  },
+  historyText: {
+    fontSize: 10,
+    fontFamily: 'ralewaylight',
+    marginRight: 22
+  },
+  newItem: {
+    paddingHorizontal: 90,
+    flexDirection: 'row',
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 10,
+    height: 45,
+    width: 340,
+    padding: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+
+  },
+
+  itemText: {
+    fontSize: 15,
+    fontFamily: 'ralewaylight'
   },
   editButton: {
     backgroundColor: '#2e64e5',
@@ -179,35 +346,45 @@ const styles = StyleSheet.create({
   draftButton: {
     borderWidth: 1,
     borderColor: 'black',
-    borderRadius: 10,
-    width: (Dimensions.get('window').width - 60) / numColumns,
-    height: 150,
+    height: 130,
+    width: 130,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
   },
+  folderIcon: {
+    marginBottom: 10
+
+  },
   draftButtonText: {
     fontWeight: 'bold',
     fontSize: 18,
-    color: '#2e64e5',
+    fontFamily: 'ralewaylight',
+    color: 'black',
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: -10,
     marginBottom: 20,
   },
   productContainer: {
-    width: (Dimensions.get('window').width - 60) / numColumns,
+    borderWidth: 1,
+    borderColor: 'black',
+    height: 130,
+    width: 130,
     marginBottom: 10,
-  },
-  productImageContainer: {
-    borderRadius: 10,
+    border: 10,
     overflow: 'hidden',
   },
+  productImageContainer: {
+    flex: 1
+  },
   productThumbnail: {
-    width: '100%',
-    height: 150,
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: 'cover',
   },
 });
